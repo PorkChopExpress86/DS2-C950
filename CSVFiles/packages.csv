@@ -1,40 +1,40 @@
-"=_xlfn.XLOOKUP(A9,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-"=_xlfn.XLOOKUP(A10,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-"=_xlfn.XLOOKUP(A11,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-"=_xlfn.XLOOKUP(A12,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-"=_xlfn.XLOOKUP(A13,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-"=_xlfn.XLOOKUP(A14,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-"=_xlfn.XLOOKUP(A15,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-"=_xlfn.XLOOKUP(A16,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-None,None,None,None,None,None,None
-None,None,None,None,None,None,None
-None,None,None,None,None,None,None
-None,None,None,None,None,None,None
- 1330 2100 S, 2530 S 500 E, 2835 Main St, 6351 S900 East, 5383 S900 E#104, 3365 S 900 W, 3148 S 1100 W
-None,None,None,None,None,None,None
-"=_xlfn.XLOOKUP(A23,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-"=_xlfn.XLOOKUP(A24,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-"=_xlfn.XLOOKUP(A25,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-"=_xlfn.XLOOKUP(A26,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-"=_xlfn.XLOOKUP(A27,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-"=_xlfn.XLOOKUP(A28,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-"=_xlfn.XLOOKUP(A29,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-"=_xlfn.XLOOKUP(A30,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-"=_xlfn.XLOOKUP(A31,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-"=_xlfn.XLOOKUP(A32,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-"=_xlfn.XLOOKUP(A33,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-"=_xlfn.XLOOKUP(A34,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-"=_xlfn.XLOOKUP(A35,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-"=_xlfn.XLOOKUP(A36,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-"=_xlfn.XLOOKUP(A37,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-"=_xlfn.XLOOKUP(A38,Sheet1!$B$9:$B$48,Sheet1!$F$9:$F$48)",None,None,None,None,None,None
-None,None,None,None,None,None,None
-None,None,None,None,None,None,None
- 5025 State St, 2600 Taylorsville Blvd, 5100 S2700 West, 3575 W Valley Central Station bus Loop, 300 State St, 600 E 900 South, 4001 S700 E
-None,None,None,None,None,None,None
-None,None,None,None,None,None,None
-None,None,None,None,None,None,None
-None,None,None,None,None,None,None
-None,None,None,None,None,None,None
-None,None,None,None,None,None,None
-None,None,None,None,None,None,None
+195 W Oakland Ave,Salt Lake City,UT,84115,10:30:00,21,None
+2530 S 500 E,Salt Lake City,UT,84106,EOD,44,None
+233 Canyon Rd,Salt Lake City,UT,84103,EOD,2,Can only be on truck 2
+380 W 2880 S,Salt Lake City,UT,84115,EOD,4,None
+410 S State St,Salt Lake City,UT,84111,EOD,5,None
+3060 Lester St,WValley City,UT,84119,10:30:00,88,Delayed on flight---will not arrive to depot until 9:05 am
+1330 2100 S,Salt Lake City,UT,84106,EOD,8,None
+300 State St,Salt Lake City,UT,84103,EOD,9,None
+300 State St,Salt Lake City,UT,84103,EOD,2,Wrong address listed
+600 E 900 South,Salt Lake City,UT,84105,EOD,1,None
+2600 Taylorsville Blvd,Salt Lake City,UT,84118,EOD,1,None
+3575 W Valley Central Station bus Loop,WValley City,UT,84119,EOD,1,None
+2010 W 500 S,Salt Lake City,UT,84104,10:30:00,2,None
+4300 S 1300 E,Millcreek,UT,84117,10:30:00,88,"Must be delivered with 15, 19"
+4580 S 2300 E,Holladay,UT,84117,09:00:00,4,None
+4580 S 2300 E,Holladay,UT,84117,10:30:00,88,"Must be delivered with 13, 19"
+3148 S 1100 W,Salt Lake City,UT,84119,EOD,2,None
+1488 4800 S,Salt Lake City,UT,84123,EOD,6,Can only be on truck 2
+177 W Price Ave,Salt Lake City,UT,84115,EOD,37,None
+3595 Main St,Salt Lake City,UT,84115,10:30:00,37,"Must be delivered with 13, 15"
+3595 Main St,Salt Lake City,UT,84115,EOD,3,None
+6351 S900 East,Murray,UT,84121,EOD,2,None
+5100 S2700 West,Salt Lake City,UT,84118,EOD,5,None
+5025 State St,Murray,UT,84107,EOD,7,None
+5383 S900 E#104,Salt Lake City,UT,84117,10:30:00,7,Delayed on flight---will not arrive to depot until 9:05 am
+5383 S900 E#104,Salt Lake City,UT,84117,EOD,25,None
+1060 Dalton Ave S,Salt Lake City,UT,84104,EOD,5,None
+2835 Main St,Salt Lake City,UT,84115,EOD,7,Delayed on flight---will not arrive to depot until 9:05 am
+1330 2100 S,Salt Lake City,UT,84106,10:30:00,2,None
+300 State St,Salt Lake City,UT,84103,10:30:00,1,None
+3365 S 900 W,Salt Lake City,UT,84119,10:30:00,1,None
+3365 S 900 W,Salt Lake City,UT,84119,EOD,1,Delayed on flight---will not arrive to depot until 9:05 am
+2530 S 500 E,Salt Lake City,UT,84106,EOD,1,None
+4580 S 2300 E,Holladay,UT,84117,10:30:00,2,None
+1060 Dalton Ave S,Salt Lake City,UT,84104,EOD,88,None
+2300 Parkway Blvd,WValley City,UT,84119,EOD,88,Can only be on truck 2
+410 S State St,Salt Lake City,UT,84111,10:30:00,2,None
+410 S State St,Salt Lake City,UT,84111,EOD,9,Can only be on truck 2
+2010 W 500 S,Salt Lake City,UT,84104,EOD,9,None
+380 W 2880 S,Salt Lake City,UT,84115,10:30:00,45,None
