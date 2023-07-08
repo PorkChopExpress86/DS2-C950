@@ -1,0 +1,35 @@
+1. First, save the Excel files as csv's. Then take a look at the locations/distance file provided and immediately transpose the values and addresses. This is for a couple reasons:
+
+	a. The matrix is only half filled.
+
+	b. The addresses on the column headings do not exactly match their counterparts in the rows. For example, a cardinal direction (e.g. "north") may be spelled out in one and abbreviated in another. If you decide to make these all uniform, Excel has a transpose option in the paste function, just as you'd transpose a matrix in DM1.
+
+2. Create a chaining hash table. There's one in the textbook you can use with slight modification. Create a lookup, hashing, and insert function; that's all I needed personally.
+
+3. Create a class each for: package, truck, and csv reading. If you've done Software I and II, this is just like creating your Parts or Appointments class; basically a model for these objects. You'll do this for the package and truck, and make sure to include all of the data outlined in the rubric and anything else you think you might need. Like you may want to add parameters for timestamps or locations, for example.
+
+4. In your csv reader, create functions to read the csv's. Some people read the addresses in a separate, third function but I honestly didn't see the point of that. Anyway, read them into your data structure of choice.
+
+	a. For the packages, it's perfectly acceptable to "manually" load the trucks. I did this by just trying to cluster packages in geographic areas using the map provided and working within the constraints of the delivery specifications.
+
+	b. If you want to be fancy but less fancy than automating package sorting, you can add a column in the package file which specifies which truck the package is going to. I tried it at first, but didn't get it to work as intended (though this was while I was trying to work with the graph so it's probably easier than I thought).
+
+	c. Create a function to lookup distances from your chosen data structure.
+
+5. Create your algorithm.
+
+	a. I wasted a T O N of time trying to implement Dijkstra's with a weighted, undirected graph and it just did not work. Again, I spent about 6-7 days straight on this before giving up and making an appointment with my CI. For the love of everything, do not do what I did.
+
+	b. Nearest Neighbor is a popular one but it was surprisingly difficult for me. Like I knew most of what needed to be done, wrote pseudocode for it, tried to whiteboard it, but just couldn't get it working. Finally I met with a CI who said "You have 99% of it here; you're just missing one thing and don't have stuff in the correct order". Fixed it in five minutes.
+
+	c. To bring it all together, what I did was create a distance search function, a shortest path function, then integrated those along with smaller custodial tasks into a "run delivery" function. This ran the sim and kept track of info like mileage and stuff.
+
+	d. I tracked mileage by just putting cumulative mileage for each truck into a list then summing the list.
+
+6. Build your CLI.
+
+	a. I just had a basic command line thing which had three options on the main menu. User entered the number and it took them to the next step, where they would enter something else like a time or package number, and the program printed info accordingly. This is where timestamps came in handy.
+
+7. Make sure everything works.
+
+8. Go through all of your code and comment or insert docstrings with appropriate descriptions and time/space complexity analysis. I didn't do every line but I did do docstrings for each class describing its purpose, then did Big-O analysis for almost every function outside of the package and truck classes. It's a lot less than it sounds.
