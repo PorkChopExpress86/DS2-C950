@@ -6,6 +6,7 @@ import numpy as np
 from Genetic import *
 from prettytable import PrettyTable
 
+
 def fill_hash_table(packages_csv: str) -> HashTable:
     """
     Fill hashtable with the package objects, using the package's id as the key.
@@ -257,21 +258,28 @@ def delivery_times(
 
 
 def display_package_data_at_time(some_time: str, hash_table: HashTable):
-    """Loop over all of the packages in the hashtable to check the delivery 
-    times against some_time. Since we will already know what time the package 
-    will be delivered, check to see if the delivery time of the package is less 
+    """Loop over all of the packages in the hashtable to check the delivery
+    times against some_time. Since we will already know what time the package
+    will be delivered, check to see if the delivery time of the package is less
     than or equal to some_time.
     :param some_time: string format that the user will enter as "hh:mm:ss"
     :return: None, it will print the status of all of the packages.
     """
     some_time_float = convert_to_hours(some_time)
 
+    # Check for package_id number 9, if some_time is less than 10:20 then
+    # it is the original address
+    if convert_to_hours("10:20:00") > some_time_float:
+        hash_table.get_item(9).address = "300 State St"
+    else:
+        hash_table.get_item(9).address = "410 S State St"
+
     # Loop over all of the packages in the hashtable to check
     # Since we will already know what time the package will be delivered,
     # check to see if the delivery time of the package is less than or
     # equal to some_time
-    table_list = [['Package ID', 'Delivery Address','Status']]
-    package_id_list = [id for id in range(1, hash_table.get_number_of_packages()+1)]
+    table_list = [["Package ID", "Delivery Address", "Status"]]
+    package_id_list = [id for id in range(1, hash_table.get_number_of_packages() + 1)]
     package_id_list.sort()
 
     for package_id in package_id_list:
@@ -288,7 +296,7 @@ def display_package_data_at_time(some_time: str, hash_table: HashTable):
         else:
             temp.append("At Hub")
         table_list.append(temp)
-    
+
     print(f"Package status table at {some_time}:")
     table = PrettyTable(table_list[0])
     table.add_rows(table_list[1:])
