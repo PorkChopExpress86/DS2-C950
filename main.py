@@ -63,80 +63,88 @@ truck3 = Truck(
 # Load packages in trucks
 load_truck_easy()
 
-print("Determining truck 1 route...")
-# Truck 1
-truck1_package_indexes = convert_package_id_to_address_index(
-    truck1.packages, address_index, hash_map
-)
+proceed = False
+while proceed == False:
+    print("Determining truck 1 route...")
+    # Truck 1
+    truck1_package_indexes = convert_package_id_to_address_index(
+        truck1.packages, address_index, hash_map
+    )
 
-best1, score1 = genetic_algorithm(
-    truck1_package_indexes,
-    np.asarray(distance_array),
-    address_index,
-    hash_map,
-    truck1,
-    n_iter=n_iters,
-    return_history=True,
-    verbose=False,
-)
+    best1, score1 = genetic_algorithm(
+        truck1_package_indexes,
+        np.asarray(distance_array),
+        address_index,
+        hash_map,
+        truck1,
+        n_iter=n_iters,
+        return_history=True,
+        verbose=False,
+    )
 
-# Time to complete the route in hours
-truck1_total_time = score1 / truck1.speed
+    # Time to complete the route in hours
+    truck1_total_time = score1 / truck1.speed
 
-# Update the finish time of the route
-truck1.finish_time = truck_finish_time(truck1, score1)
-
-
-print("Determining truck 2 route...")
-# Truck 2
-truck2_package_indexes = convert_package_id_to_address_index(
-    truck2.packages, address_index, hash_map
-)
-
-best2, score2 = genetic_algorithm(
-    truck2_package_indexes,
-    np.asarray(distance_array),
-    address_index,
-    hash_map,
-    truck2,
-    n_iter=n_iters,
-    return_history=True,
-    verbose=False,
-)
-truck2_total_time = score2 / truck2.speed
-truck2.finish_time = truck_finish_time(truck2, score2)
-
-# Truck 3
-# Since truck 3 does not leave until 10:20 AM, the package address can be updated right before
-# the path is computed or until truck 1 returns back to the hub, so wich every one is later will
-# be the departure time of truck3.
-print("Determining truck 3 route...")
-if convert_to_hours(truck1.finish_time) > convert_to_hours("10:20:00"):
-    truck3.departure_time = truck1.finish_time
-
-# Update package address for package ID number 9
-hash_map.get_item(9).address = "410 S State St"
-
-truck3_package_indexes = convert_package_id_to_address_index(
-    truck3.packages, address_index, hash_map
-)
-
-best3, score3 = genetic_algorithm(
-    truck3_package_indexes,
-    np.asarray(distance_array),
-    address_index,
-    hash_map,
-    truck3,
-    n_iter=n_iters,
-    return_history=True,
-    verbose=False,
-)
-
-truck3_total_time = score3 / truck3.speed
-truck3.finish_time = truck_finish_time(truck3, score3)
+    # Update the finish time of the route
+    truck1.finish_time = truck_finish_time(truck1, score1)
 
 
-total_distance = score1 + score2 + score2
+    print("Determining truck 2 route...")
+    # Truck 2
+    truck2_package_indexes = convert_package_id_to_address_index(
+        truck2.packages, address_index, hash_map
+    )
+
+    best2, score2 = genetic_algorithm(
+        truck2_package_indexes,
+        np.asarray(distance_array),
+        address_index,
+        hash_map,
+        truck2,
+        n_iter=n_iters,
+        return_history=True,
+        verbose=False,
+    )
+    truck2_total_time = score2 / truck2.speed
+    truck2.finish_time = truck_finish_time(truck2, score2)
+
+    # Truck 3
+    # Since truck 3 does not leave until 10:20 AM, the package address can be updated right before
+    # the path is computed or until truck 1 returns back to the hub, so wich every one is later will
+    # be the departure time of truck3.
+    print("Determining truck 3 route...")
+    if convert_to_hours(truck1.finish_time) > convert_to_hours("10:20:00"):
+        truck3.departure_time = truck1.finish_time
+
+    # Update package address for package ID number 9
+    hash_map.get_item(9).address = "410 S State St"
+
+    truck3_package_indexes = convert_package_id_to_address_index(
+        truck3.packages, address_index, hash_map
+    )
+
+    best3, score3 = genetic_algorithm(
+        truck3_package_indexes,
+        np.asarray(distance_array),
+        address_index,
+        hash_map,
+        truck3,
+        n_iter=n_iters,
+        return_history=True,
+        verbose=False,
+    )
+
+    truck3_total_time = score3 / truck3.speed
+    truck3.finish_time = truck_finish_time(truck3, score3)
+
+
+    total_distance = score1 + score2 + score2
+    if total_distance < 140:
+        proceed = True
+    else:
+        print("[bold red]Route is too long, increasing iterations and running again[/bold red]")
+        n_iters += 500
+
 print(f"Total trip disance is {total_distance:.2f} miles.")
 
 distance_mat = np.asarray(distance_array)
