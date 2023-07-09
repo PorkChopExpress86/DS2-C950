@@ -4,7 +4,7 @@ from Truck import Truck
 import csv
 import numpy as np
 from Genetic import *
-
+from prettytable import PrettyTable
 
 def fill_hash_table(packages_csv: str) -> HashTable:
     """
@@ -214,7 +214,7 @@ def delivery_times(
     total_distance = 0
     deliver_route = []
     # get a list of the distances from one stop to the next
-    for stop in range(len(route)-1):
+    for stop in range(len(route) - 1):
         total_distance += distance_mat[route[stop], route[stop + 1]]
 
         if route[stop + 1] != 0:
@@ -246,6 +246,7 @@ def delivery_times(
                     total_distance / truck.speed
                 )
                 p.delivery_time = hours_to_string(total_time)
+                p.departure_time = truck.departure_time
                 delivery_time = p.delivery_time
             stop_route.append(stop_route_package)
             stop_route.append(total_distance)
@@ -253,3 +254,42 @@ def delivery_times(
             deliver_route.append(stop_route)
 
     return deliver_route
+
+
+def display_package_data_at_time(some_time: str, hash_table: HashTable):
+    """Loop over all of the packages in the hashtable to check the delivery 
+    times against some_time. Since we will already know what time the package 
+    will be delivered, check to see if the delivery time of the package is less 
+    than or equal to some_time.
+    :param some_time: string format that the user will enter as "hh:mm:ss"
+    :return: None, it will print the status of all of the packages.
+    """
+    some_time_float = convert_to_hours(some_time)
+
+    # Loop over all of the packages in the hashtable to check
+    # Since we will already know what time the package will be delivered,
+    # check to see if the delivery time of the package is less than or
+    # equal to some_time
+    table_list = [['Package ID', 'Delivery Address','Status']]
+    package_id_list = [id for id in range(1, hash_table.get_number_of_packages()+1)]
+    package_id_list.sort()
+
+    for package_id in package_id_list:
+        package = hash_table.get_item(package_id)
+        temp = []
+        temp.append(package.id)
+        temp.append(package.address)
+
+        package_delivery = convert_to_hours(package.delivery_time)
+        if package_delivery <= some_time_float:
+            temp.append("Delivered")
+        elif convert_to_hours(package.departure_time) <= some_time_float:
+            temp.append("In Route")
+        else:
+            temp.append("At Hub")
+        table_list.append(temp)
+    
+    print(f"Package status table at {some_time}:")
+    table = PrettyTable(table_list[0])
+    table.add_rows(table_list[1:])
+    print(table)
