@@ -3,17 +3,40 @@ from Genetic import *
 from Truck import Truck
 from Package import Package
 import os
+from rich import print
 
 # Clear console
-os.system('cls')
+os.system("cls")
+while True:
+    print(
+        "Enter the number of [bold magenta]iterations[/bold magenta] for the genetic algorithm to solve the route for each truck. [bold green]Default is 1000 iterations[/bold green], [red]a larger number will take longer[/red], [green]but can get a shorter route.[/green]"
+    )
+    n_iters = input("Iterations: ")
+    if n_iters == "":
+        print("[blue]Default settings, 1000 iterations...")
+        n_iters = 1000
+        break
+    else:
+        try:
+            n_iters = int(n_iters)
+            break
+        except:
+            print("[bold red]Bad format for Iterations, try again...\n[/bold red]")
+
 print("Loading truck...")
+
+
 def load_truck_easy():
-    """Manual loading of the truck packages"""
+    """Manual loading of the truck packages
+    Big(O): O(1)
+    """
     truck1.packages = [7, 29, 19, 1, 13, 39, 20, 21, 4, 40, 14, 15, 16, 34]
     truck2.packages = [18, 36, 3, 8, 30, 6, 31, 32, 5, 37, 38, 25, 26]
     truck3.packages = [27, 35, 2, 33, 11, 28, 17, 12, 24, 23, 10, 22, 9]
 
+
 print("Setting up data structures...")
+
 # Fill hash table
 hash_map = fill_hash_table("CSVFiles/packages.csv")
 
@@ -24,7 +47,7 @@ distance_array = create_distance_matrix("CSVFiles/distance_table.csv")
 address_index = create_address_dict("CSVFiles/addresses.csv")
 
 # Set up parameters and create truck objects
-truck_packages = {}
+# truck_packages = {}
 speed = 18
 truck1 = Truck(
     1, speed=speed, location="4001 S700 E", departure_time="08:00:00"
@@ -33,7 +56,9 @@ truck2 = Truck(
     2, speed=speed, location="4001 S700 E", departure_time="09:05:00"
 )  # late arrival packages
 
-truck3 = Truck(3, speed=speed, location="4001 S700 E", departure_time="10:20:00")  # EOD deliveries and left overs
+truck3 = Truck(
+    3, speed=speed, location="4001 S700 E", departure_time="10:20:00"
+)  # EOD deliveries and left overs
 
 # Load packages in trucks
 load_truck_easy()
@@ -50,6 +75,7 @@ best1, score1 = genetic_algorithm(
     address_index,
     hash_map,
     truck1,
+    n_iter=n_iters,
     return_history=True,
     verbose=False,
 )
@@ -73,6 +99,7 @@ best2, score2 = genetic_algorithm(
     address_index,
     hash_map,
     truck2,
+    n_iter=n_iters,
     return_history=True,
     verbose=False,
 )
@@ -87,8 +114,8 @@ print("Determining truck 3 route...")
 if convert_to_hours(truck1.finish_time) > convert_to_hours("10:20:00"):
     truck3.departure_time = truck1.finish_time
 
-#update package address for package ID number 9
-hash_map.get_item(9).address = '410 S State St'
+# Update package address for package ID number 9
+hash_map.get_item(9).address = "410 S State St"
 
 truck3_package_indexes = convert_package_id_to_address_index(
     truck3.packages, address_index, hash_map
@@ -100,6 +127,7 @@ best3, score3 = genetic_algorithm(
     address_index,
     hash_map,
     truck3,
+    n_iter=n_iters,
     return_history=True,
     verbose=False,
 )
@@ -128,11 +156,22 @@ print("Done! Ready for user input")
 
 # Forever loop to keep entering times and displaying a table of the data until the user enters quit or q
 while True:
+    some_time = input(
+        "\nEnter a time to check on all package statuses (hh:mm:ss), or enter Quit or Q to stop:"
+    )
 
-    some_time = input('\nEnter a time to check on the packages (hh:mm:ss), or enter quit to stop:')
     if some_time.lower() == "quit" or some_time.lower() == "q":
         print("Exiting program...")
         break
-    os.system('cls')
-    display_package_data_at_time(some_time, hash_map)
-    x = input("Press any key to continue...")
+    try:
+        h, m, s = some_time.split(":")
+        if len(h) != 2 or len(m) != 2 or len(s) != 2:
+            print(
+                "[bold red]Bad time format, need two digits for Hour, Minute and Seconds.\n[/bold red]"
+            )
+        else:
+            os.system("cls")
+            display_package_data_at_time(some_time, hash_map)
+            x = input("Press any key to continue...")
+    except ValueError:
+        print("[bold red]Bad time format, try again.\n[/bold red]")
