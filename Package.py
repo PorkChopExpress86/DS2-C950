@@ -1,11 +1,3 @@
-def _convert_to_hours(some_time: str) -> float:
-    h, m, s = some_time.split(":")
-    hrs = float(h)
-    hrs += float(m) / 60
-    hrs += float(s) / (60 * 60)
-    return hrs
-
-
 class Package:
     """
     Package class that is initialized with the following parameters
@@ -56,14 +48,3 @@ class Package:
             f"\tDeparture Time: {self.departure_time}\n"
             f"\tDelivery Time: {self.delivery_time}"
         )
-
-    def set_status(self, some_time: str) -> None:
-        some_time = _convert_to_hours(some_time)
-        if self.delivery_time is not None:
-            delivered_time = _convert_to_hours(self.delivery_time)
-        if self.delivery_time is None and self.departure_time < some_time:
-            self.status = "En Route"
-        elif self.delivery_time <= some_time:
-            self.status = "Delivered"
-        else:
-            self.status = "At Hub"
