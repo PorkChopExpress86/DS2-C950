@@ -110,8 +110,8 @@ def genetic_algorithm(
     address_index,
     hash_map,
     truck,
-    n_population=50,
-    n_iter=1000,
+    n_population=20,
+    n_iter=500,
     selectivity=0.15,
     p_cross=0.5,
     p_mut=0.1,
@@ -163,8 +163,12 @@ def convert_address_id_to_address(hash_map: HashTable, best: list, address_list:
 def truck_finish_time(truck: Truck, score: float):
     departure_time = convert_to_hours(truck.departure_time)
     total_time = departure_time + score / truck.speed
-    hours = int(total_time - (total_time % 1))
-    minutes = (total_time % 1) * 60
+    return hours_to_string(total_time)
+
+
+def hours_to_string(some_time: float) -> str:
+    hours = int(some_time - (some_time % 1))
+    minutes = (some_time % 1) * 60
     seconds = (minutes % 1) * 60
     minutes = int(minutes)
     seconds = int(round(seconds, 0))
@@ -186,7 +190,66 @@ def truck_finish_time(truck: Truck, score: float):
     return f"{hours_str}:{minutes_str}:{seconds_str}"
 
 
-def address_index_to_package_id(
+def package_delivery_time(departure_time: str, elasped_time: str) -> str:
+    depart_hours = convert_to_hours(departure_time)
+    delivery_hour = depart_hours + convert_to_hours(elasped_time)
+
+
+def delivery_times(
+    truck: Truck,
+    route: list,
+    distance_mat: list,
+    address_index: dict,
     hash_table: HashTable,
-):
-    pass
+) -> list:
+    """Enter the times the packages on the truck will be delivered to the address
+    given the route by the genetic algorithm. The route is a list of the address indexes,
+    not the package ids
+
+    :param truck: Truck class of the truck that contains the packages
+    :param route: List of the address indexes in the order of the route. Each index may have many packages
+    :param distance_mat: the 2d list of the distance matrix
+    :return: None
+    """
+    total_distance = 0
+    deliver_route = []
+    # get a list of the distances from one stop to the next
+    for stop in range(len(route)-1):
+        total_distance += distance_mat[route[stop], route[stop + 1]]
+
+        if route[stop + 1] != 0:
+            # This list will be used to check the route
+            # [[address, [packages], total distance]]
+            stop_route = []
+            # Get the packages that may be delivered to the address
+            # convert to address
+            for key, value in address_index.items():
+                if value == route[stop + 1]:
+                    address = key
+                    stop_route.append(address)
+                    break
+
+            # convert to package id
+            packages = []
+            for i in range(len(hash_table.data_map)):
+                if hash_table.data_map[i] is not None:
+                    for j in range(len(hash_table.data_map[i])):
+                        package = hash_table.data_map[i][j][1]
+                        if package.address == address:
+                            packages.append(package)
+            stop_route_package = []
+            delivery_time = 0
+            for p in packages:
+                stop_route_package.append(p.id)
+                departure_time = convert_to_hours(truck.departure_time)
+                total_time = convert_to_hours(truck.departure_time) + (
+                    total_distance / truck.speed
+                )
+                p.delivery_time = hours_to_string(total_time)
+                delivery_time = p.delivery_time
+            stop_route.append(stop_route_package)
+            stop_route.append(total_distance)
+            stop_route.append(delivery_time)
+            deliver_route.append(stop_route)
+
+    return deliver_route
