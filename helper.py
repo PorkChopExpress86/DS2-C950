@@ -168,6 +168,7 @@ def truck_finish_time(truck: Truck, score: float):
 
 
 def hours_to_string(some_time: float) -> str:
+    # TODO: there was a case where the number of seconds was 60. This should be an additional minute. Need to check for minutes too
     hours = int(some_time - (some_time % 1))
     minutes = (some_time % 1) * 60
     seconds = (minutes % 1) * 60
@@ -278,7 +279,7 @@ def display_package_data_at_time(some_time: str, hash_table: HashTable):
     # Since we will already know what time the package will be delivered,
     # check to see if the delivery time of the package is less than or
     # equal to some_time
-    table_list = [["Package ID", "Delivery Address", "Status"]]
+    table_list = [["Package ID", "Delivery Address", "Status", "Time of Delivery"]]
     package_id_list = [id for id in range(1, hash_table.get_number_of_packages() + 1)]
     package_id_list.sort()
 
@@ -291,10 +292,13 @@ def display_package_data_at_time(some_time: str, hash_table: HashTable):
         package_delivery = convert_to_hours(package.delivery_time)
         if package_delivery <= some_time_float:
             temp.append("Delivered")
+            temp.append(package.delivery_time)
         elif convert_to_hours(package.departure_time) <= some_time_float:
             temp.append("In Route")
+            temp.append(f"ETA: {package.delivery_time}")
         else:
             temp.append("At Hub")
+            temp.append(f"ETA: {package.delivery_time}")
         table_list.append(temp)
 
     print(f"Package status table at {some_time}:")
