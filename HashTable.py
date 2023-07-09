@@ -60,6 +60,10 @@ class HashTable:
         for i, val in enumerate(self.data_map):
             print(i, ": ", val)
 
+    def get_number_of_packages(self) -> int:
+        return max(self.keys())
+
+
 # Python tests
 def fill_hash_table():
     test_data = [
@@ -86,3 +90,5 @@ def test_get_items():
     assert my_hash_table.get_item(3) == "The Godfather - 1972"
     assert my_hash_table.get_item(4) == "Gone with the Wind - 1939"
     assert my_hash_table.get_item(5) == "Lawrence of Arabia - 1962"
+    assert max(my_hash_table.keys()) == 5
+    assert my_hash_table.get_number_of_packages() == 5
