@@ -110,8 +110,8 @@ def genetic_algorithm(
     address_index,
     hash_map,
     truck,
-    n_population=20,
-    n_iter=500,
+    n_population=25,
+    n_iter=1000,
     selectivity=0.15,
     p_cross=0.5,
     p_mut=0.1,
@@ -235,7 +235,7 @@ def delivery_times(
                 if hash_table.data_map[i] is not None:
                     for j in range(len(hash_table.data_map[i])):
                         package = hash_table.data_map[i][j][1]
-                        if package.address == address:
+                        if package.address == address and package.id in truck.packages:
                             packages.append(package)
             stop_route_package = []
             delivery_time = 0
