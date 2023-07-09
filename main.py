@@ -49,9 +49,11 @@ best1, score1 = genetic_algorithm(
     return_history=True,
     verbose=False,
 )
+
 # Time to complete the route in hours
 truck1_total_time = score1 / truck1.speed
 
+# Update the finish time of the route
 truck1.finish_time = truck_finish_time(truck1, score1)
 
 
@@ -74,11 +76,12 @@ truck2_total_time = score2 / truck2.speed
 truck2.finish_time = truck_finish_time(truck2, score2)
 
 # Truck 3
-if truck1.finish_time < truck2.finish_time:
-    t3_depart = truck1.finish_time
-else:
-    t3_depart = truck2.finish_time
-truck3.departure_time = t3_depart
+# Since truck 3 does not leave until 10:20 AM, the package address can be updated right before
+# the path is computed.
+
+#update package address for package ID number 9
+hash_map.get_item(9).address = '410 S State St'
+
 truck3_package_indexes = convert_package_id_to_address_index(
     truck3.packages, address_index, hash_map
 )
