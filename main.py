@@ -2,15 +2,18 @@ from helper import *
 from Genetic import *
 from Truck import Truck
 from Package import Package
+import os
 
-
+# Clear console
+os.system('cls')
+print("Loading truck...")
 def load_truck_easy():
     """Manual loading of the truck packages"""
     truck1.packages = [7, 29, 19, 1, 13, 39, 20, 21, 4, 40, 14, 15, 16, 34]
     truck2.packages = [18, 36, 3, 8, 30, 6, 31, 32, 5, 37, 38, 25, 26]
     truck3.packages = [27, 35, 2, 33, 11, 28, 17, 12, 24, 23, 10, 22, 9]
 
-
+print("Setting up data structures...")
 # Fill hash table
 hash_map = fill_hash_table("CSVFiles/packages.csv")
 
@@ -35,6 +38,7 @@ truck3 = Truck(3, speed=speed, location="4001 S700 E", departure_time="10:20:00"
 # Load packages in trucks
 load_truck_easy()
 
+print("Determining truck 1 route...")
 # Truck 1
 truck1_package_indexes = convert_package_id_to_address_index(
     truck1.packages, address_index, hash_map
@@ -57,7 +61,7 @@ truck1_total_time = score1 / truck1.speed
 truck1.finish_time = truck_finish_time(truck1, score1)
 
 
-
+print("Determining truck 2 route...")
 # Truck 2
 truck2_package_indexes = convert_package_id_to_address_index(
     truck2.packages, address_index, hash_map
@@ -79,7 +83,7 @@ truck2.finish_time = truck_finish_time(truck2, score2)
 # Since truck 3 does not leave until 10:20 AM, the package address can be updated right before
 # the path is computed or until truck 1 returns back to the hub, so wich every one is later will
 # be the departure time of truck3.
-
+print("Determining truck 3 route...")
 if convert_to_hours(truck1.finish_time) > convert_to_hours("10:20:00"):
     truck3.departure_time = truck1.finish_time
 
@@ -105,14 +109,30 @@ truck3.finish_time = truck_finish_time(truck3, score3)
 
 
 total_distance = score1 + score2 + score2
-print(f"Total trip disance was {total_distance:.2f}")
+print(f"Total trip disance is {total_distance:.2f} miles.")
 
 distance_mat = np.asarray(distance_array)
 
+print("Updating package data...")
 truck1_route = delivery_times(truck1, best1, distance_mat, address_index, hash_map)
 truck2_route = delivery_times(truck2, best2, distance_mat, address_index, hash_map)
 truck3_route = delivery_times(truck3, best3, distance_mat, address_index, hash_map)
 
-print(f"Truck 1: {score1:.2f} miles\n{truck1_route}\n")
-print(f"Truck 2: {score2:.2f} miles\n{truck2_route}\n")
-print(f"Truck 3: {score3:.2f} miles\n{truck3_route}\n")
+# # For auditing purposes, this will produce the overall distance and a 2d list of the route information in the following format:
+# #[['address',[package_ids for address], distance traveled so far, delivery time]]
+# print(f"Truck 1: {score1:.2f} miles\n{truck1_route}\n")
+# print(f"Truck 2: {score2:.2f} miles\n{truck2_route}\n")
+# print(f"Truck 3: {score3:.2f} miles\n{truck3_route}\n")
+
+print("Done! Ready for user input")
+
+# Forever loop to keep entering times and displaying a table of the data until the user enters quit or q
+while True:
+
+    some_time = input('\nEnter a time to check on the packages (hh:mm:ss), or enter quit to stop:')
+    if some_time.lower() == "quit" or some_time.lower() == "q":
+        print("Exiting program...")
+        break
+    os.system('cls')
+    display_package_data_at_time(some_time, hash_map)
+    x = input("Press any key to continue...")
