@@ -3,7 +3,7 @@ from HashTable import HashTable
 from Package import Package
 from Truck import Truck
 
-np.random.seed()
+np.random.seed(42)
 
 
 # Create a population of some paths to start as the parents
@@ -51,9 +51,10 @@ def swap(chromosome):
     return chromosome
 
 
-def _convert_to_hours(some_time: str) -> float or str:
-    # if some_time == "EOD":
-    #     return "EOD"
+def _convert_to_hours(some_time: str) -> float:
+    """Convert a string in the format of hh:mm:ss into hours as a float
+    Big(O) = O(n) since split has to loop over the length of the string
+    """
     h, m, s = some_time.split(":")
     hrs = float(h)
     hrs += float(m) / 60
@@ -82,7 +83,8 @@ class Population:
 
     def address_index_to_package_id(self, address_index: int) -> Package:
         """Convert the address index to an address and then convert the address to the package
-        id by looping over the hash_table"""
+        id by looping over the hash_table
+        Big(O) = O(n+n^2)"""
 
         # convert to address
         for key, value in self.address_dict.items():
@@ -98,14 +100,14 @@ class Population:
                     if package.address == address:
                         return package
 
-    # Test to see how well the chosen path is
     def fitness(self, chromosome) -> float:
         """
         Test the distance of a random route and check to see if the package will be delivered by the delivery time.
         If the package will not be delivered, then the total distance will have a 1000-mile penalty.
         :param chromosome: one of the routes from bag (np.array())
         :return: distance of the route
-        Big(O): O(n) to loop the locations in a route
+        Big(O): O(n) to loop the locations in a route, but there is a call to address_index_to_package_id that is O(n+n^2). The overall complexity to 
+        run this method is O(n+n+n^2)
         """
         total_distance = 0
         full_route = np.insert(chromosome, 0, 0)
@@ -167,6 +169,7 @@ class Population:
         Randomly pick parts of the best route and randomly create different new routes based on the parent
         :param p_cross: probability to create a random part for another route
         :return: new routes for bag.
+        Big(O) = O(n(n+n)) wich will come out to O(n^2) for the loops inside of a loop
         """
         children = []
         count, size = self.parents.shape
@@ -190,6 +193,9 @@ class Population:
         return children
 
     def mutate(self, p_cross=0.1, p_mut=0.1):
+        """
+        :parm p_cross: 
+        """
         next_bag = []
         children = self.crossover(p_cross)
         for child in children:
