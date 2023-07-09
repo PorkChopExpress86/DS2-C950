@@ -77,7 +77,11 @@ truck2.finish_time = truck_finish_time(truck2, score2)
 
 # Truck 3
 # Since truck 3 does not leave until 10:20 AM, the package address can be updated right before
-# the path is computed.
+# the path is computed or until truck 1 returns back to the hub, so wich every one is later will
+# be the departure time of truck3.
+
+if convert_to_hours(truck1.finish_time) > convert_to_hours("10:20:00"):
+    truck3.departure_time = truck1.finish_time
 
 #update package address for package ID number 9
 hash_map.get_item(9).address = '410 S State St'
