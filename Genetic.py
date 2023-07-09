@@ -106,7 +106,7 @@ class Population:
         If the package will not be delivered, then the total distance will have a 1000-mile penalty.
         :param chromosome: one of the routes from bag (np.array())
         :return: distance of the route
-        Big(O): O(n) to loop the locations in a route, but there is a call to address_index_to_package_id that is O(n+n^2). The overall complexity to 
+        Big(O): O(n) to loop the locations in a route, but there is a call to address_index_to_package_id that is O(n+n^2). The overall complexity to
         run this method is O(n+n+n^2)
         """
         total_distance = 0
@@ -194,7 +194,10 @@ class Population:
 
     def mutate(self, p_cross=0.1, p_mut=0.1):
         """
-        :parm p_cross: 
+        :parm p_cross: probability to create a random part for another route
+        :parm p_mut: probablity to perform a swap on the route/chromosome
+        :return: next_bag a list of the next children of the previous generation
+        Big(O): O(n) looping over the list of children
         """
         next_bag = []
         children = self.crossover(p_cross)
@@ -210,6 +213,7 @@ class Population:
         Convert the address indexes into package id's for best route.
         Use the common part of the address to link the two together.
         :return: list of package ids in the order of the best route
+        Big(O): O(n^2) looping over the address_dict and the best list
         """
         address_route = []
 
