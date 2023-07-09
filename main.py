@@ -5,8 +5,14 @@ from Package import Package
 import os
 from rich import print
 
+def clear_console():
+    if os.name == 'nt':
+        _ = os.system('cls')
+    else:
+        _ = os.system('clear')
 # Clear console
-os.system("cls")
+clear_console()
+
 while True:
     print(
         "Enter the number of [bold magenta]iterations[/bold magenta] for the genetic algorithm to solve the route for each truck. [bold green]Default is 1000 iterations[/bold green], [red]a larger number will take longer[/red], [green]but can get a shorter route.[/green]"
@@ -178,7 +184,7 @@ while True:
                 "[bold red]Bad time format, need two digits for Hour, Minute and Seconds.\n[/bold red]"
             )
         else:
-            os.system("cls")
+            clear_console
             display_package_data_at_time(some_time, hash_map)
             x = input("Press any key to continue...")
     except ValueError:
