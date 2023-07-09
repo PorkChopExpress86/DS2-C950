@@ -35,9 +35,9 @@ truck3 = Truck(3, speed=speed, location="4001 S700 E")  # EOD deliveries and lef
 # Load packages in trucks
 load_truck_easy()
 
-print(truck1.packages)
-print(truck2.packages)
-print(truck3.packages)
+# print(truck1.packages)
+# print(truck2.packages)
+# print(truck3.packages)
 
 
 # Truck 1
@@ -59,9 +59,9 @@ truck1_total_time = score1 / truck1.speed
 
 truck1.finish_time = truck_finish_time(truck1, score1)
 
-print(
-    f"The best route for truck 1 is {best1}. \t\nThat will be {score1:.1f} miles. \t\nDeparture: {truck1.departure_time}, finish time: {truck1.finish_time}"
-)
+# print(
+#     f"The best route for truck 1 is {best1}. \t\nThat will be {score1:.1f} miles. \t\nDeparture: {truck1.departure_time}, finish time: {truck1.finish_time}"
+# )
 
 # Truck 2
 truck2_package_indexes = convert_package_id_to_address_index(
@@ -79,9 +79,9 @@ best2, score2 = genetic_algorithm(
 )
 truck2_total_time = score2 / truck2.speed
 truck2.finish_time = truck_finish_time(truck2, score2)
-print(
-    f"The best route for truck 2 is {best2}. \t\nThat will be {score2:.1f} miles. \t\nDeparture: {truck2.departure_time}, finish time: {truck2.finish_time}"
-)
+# print(
+#     f"The best route for truck 2 is {best2}. \t\nThat will be {score2:.1f} miles. \t\nDeparture: {truck2.departure_time}, finish time: {truck2.finish_time}"
+# )
 
 # Truck 3
 if truck1.finish_time < truck2.finish_time:
@@ -105,22 +105,32 @@ best3, score3 = genetic_algorithm(
 
 truck3_total_time = score3 / truck3.speed
 truck3.finish_time = truck_finish_time(truck3, score3)
-print(
-    f"The best route for truck 3 is {best3}. \t\nThat will be {score3:.1f} miles. \t\nDeparture: {truck3.departure_time}, finish time: {truck3.finish_time}"
-)
+# print(
+#     f"The best route for truck 3 is {best3}. \t\nThat will be {score3:.1f} miles. \t\nDeparture: {truck3.departure_time}, finish time: {truck3.finish_time}"
+# )
 total_distance = score1 + score2 + score2
 print(f"Total trip disance was {total_distance:.2f}")
 
-truck1_route_address = convert_address_id_to_address(hash_map, best1, address_index)
-truck2_route_address = convert_address_id_to_address(hash_map, best2, address_index)
-truck3_route_address = convert_address_id_to_address(hash_map, best3, address_index)
+# truck1_route_address = convert_address_id_to_address(hash_map, best1, address_index)
+# truck2_route_address = convert_address_id_to_address(hash_map, best2, address_index)
+# truck3_route_address = convert_address_id_to_address(hash_map, best3, address_index)
 
-print(
-    f"The best route for truck 1 is {truck1_route_address}. \t\nThat will be {score1} miles."
-)
-print(
-    f"The best route for truck 2 is {truck2_route_address}. \t\nThat will be {score2} miles."
-)
-print(
-    f"The best route for truck 3 is {truck3_route_address}. \t\nThat will be {score3} miles."
-)
+# print(
+#     f"The best route for truck 1 is {truck1_route_address}. \t\nThat will be {score1} miles."
+# )
+# print(
+#     f"The best route for truck 2 is {truck2_route_address}. \t\nThat will be {score2} miles."
+# )
+# print(
+#     f"The best route for truck 3 is {truck3_route_address}. \t\nThat will be {score3} miles."
+# )
+
+distance_mat = np.asarray(distance_array)
+
+truck1_route = delivery_times(truck1, best1, distance_mat, address_index, hash_map)
+truck2_route = delivery_times(truck2, best2, distance_mat, address_index, hash_map)
+truck3_route = delivery_times(truck3, best3, distance_mat, address_index, hash_map)
+
+print(f"Truck 1: \n{truck1_route}\n")
+print(f"Truck 2: \n{truck2_route}\n")
+print(f"Truck 3: \n{truck3_route}\n")
