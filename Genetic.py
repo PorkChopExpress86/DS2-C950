@@ -3,7 +3,7 @@ from HashTable import HashTable
 from Package import Package
 from Truck import Truck
 
-np.random.seed()
+np.random.seed(42)
 
 
 # Create a population of some paths to start as the parents
