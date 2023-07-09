@@ -17,7 +17,7 @@ while True:
     print(
         "Enter the number of [bold magenta]iterations[/bold magenta] for the genetic algorithm to solve the route for each truck. [bold green]Default is 1000 iterations[/bold green], [red]a larger number will take longer[/red], [green]but can get a shorter route.[/green]"
     )
-    n_iters = input("Iterations: ")
+    n_iters = input("Number of Iterations (press Enter for 1000): ")
     if n_iters == "":
         print("[blue]Default settings, 1000 iterations...")
         n_iters = 1000
@@ -29,7 +29,7 @@ while True:
         except:
             print("[bold red]Bad format for Iterations, try again...\n[/bold red]")
 
-print("Loading truck...")
+print("[blue]Loading truck...[/blue]")
 
 
 def load_truck_easy():
@@ -41,7 +41,7 @@ def load_truck_easy():
     truck3.packages = [27, 35, 2, 33, 11, 28, 17, 12, 24, 23, 10, 22, 9]
 
 
-print("Setting up data structures...")
+print("[blue]Setting up data structures...[/blue]")
 
 # Fill hash table
 hash_map = fill_hash_table("CSVFiles/packages.csv")
@@ -71,7 +71,7 @@ load_truck_easy()
 
 proceed = False
 while proceed == False:
-    print("Determining truck 1 route...")
+    print("[green]Determining truck 1 route...[/green]")
     # Truck 1
     truck1_package_indexes = convert_package_id_to_address_index(
         truck1.packages, address_index, hash_map
@@ -95,7 +95,7 @@ while proceed == False:
     truck1.finish_time = truck_finish_time(truck1, score1)
 
 
-    print("Determining truck 2 route...")
+    print("[green]Determining truck 2 route...[/green]")
     # Truck 2
     truck2_package_indexes = convert_package_id_to_address_index(
         truck2.packages, address_index, hash_map
@@ -118,7 +118,7 @@ while proceed == False:
     # Since truck 3 does not leave until 10:20 AM, the package address can be updated right before
     # the path is computed or until truck 1 returns back to the hub, so wich every one is later will
     # be the departure time of truck3.
-    print("Determining truck 3 route...")
+    print("[green]Determining truck 3 route...[/green]")
     if convert_to_hours(truck1.finish_time) > convert_to_hours("10:20:00"):
         truck3.departure_time = truck1.finish_time
 
@@ -151,11 +151,11 @@ while proceed == False:
         print("[bold red]Route is too long, increasing iterations and running again[/bold red]")
         n_iters += 500
 
-print(f"Total trip disance is {total_distance:.2f} miles.")
+print(f"[bold magenta]Total trip disance is {total_distance:.2f} miles.[/bold magenta]")
 
 distance_mat = np.asarray(distance_array)
 
-print("Updating package data...")
+print("[blue]Updating package data...[/blue]")
 truck1_route = delivery_times(truck1, best1, distance_mat, address_index, hash_map)
 truck2_route = delivery_times(truck2, best2, distance_mat, address_index, hash_map)
 truck3_route = delivery_times(truck3, best3, distance_mat, address_index, hash_map)
@@ -166,7 +166,7 @@ truck3_route = delivery_times(truck3, best3, distance_mat, address_index, hash_m
 # print(f"Truck 2: {score2:.2f} miles\n{truck2_route}\n")
 # print(f"Truck 3: {score3:.2f} miles\n{truck3_route}\n")
 
-print("Done! Ready for user input")
+print("[blue]Done! Ready for user input[/blue]")
 
 # Forever loop to keep entering times and displaying a table of the data until the user enters quit or q
 while True:
