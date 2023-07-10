@@ -5,11 +5,14 @@ from Package import Package
 import os
 from rich import print
 
+
 def clear_console():
-    if os.name == 'nt':
-        _ = os.system('cls')
+    if os.name == "nt":
+        _ = os.system("cls")
     else:
-        _ = os.system('clear')
+        _ = os.system("clear")
+
+
 # Clear console
 clear_console()
 
@@ -94,7 +97,6 @@ while proceed == False:
     # Update the finish time of the route
     truck1.finish_time = truck_finish_time(truck1, score1)
 
-
     print("[green]Determining truck 2 route...[/green]")
     # Truck 2
     truck2_package_indexes = convert_package_id_to_address_index(
@@ -143,12 +145,13 @@ while proceed == False:
     truck3_total_time = score3 / truck3.speed
     truck3.finish_time = truck_finish_time(truck3, score3)
 
-
     total_distance = score1 + score2 + score2
     if total_distance < 140:
         proceed = True
     else:
-        print("[bold red]Route is too long, increasing iterations and running again[/bold red]")
+        print(
+            "[bold red]Route is too long, increasing iterations and running again[/bold red]"
+        )
         n_iters += 500
 
 print(f"[bold magenta]Total trip disance is {total_distance:.2f} miles.[/bold magenta]")
@@ -181,11 +184,13 @@ while True:
         h, m, s = some_time.split(":")
         if len(h) != 2 or len(m) != 2 or len(s) != 2:
             print(
-                "[bold red]Bad time format, need two digits for Hour, Minute and Seconds.\n[/bold red]"
+                "[bold red]Bad time format, need two digits for Hour, Minute and Seconds, in this format hh:mm:ss...\n[/bold red]"
             )
         else:
             clear_console
             display_package_data_at_time(some_time, hash_map)
             x = input("Press any key to continue...")
     except ValueError:
-        print("[bold red]Bad time format, try again.\n[/bold red]")
+        print(
+            "[bold red]Bad time format, try again in this format hh:mm:ss...\n[/bold red]"
+        )
