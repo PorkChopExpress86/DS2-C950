@@ -120,6 +120,21 @@ def genetic_algorithm(
     return_history=False,
     verbose=False,
 ):
+    """Method to call the genetic algorith to find an optimal route
+    :param location_indexes:
+    :param adjacency_mat:
+    :param address_index:
+    :param hash_map:
+    :param truck:
+    :param n_population:
+    :param n_iter:
+    :param selectivity:
+    :param p_cross:
+    :param p_mut:
+    :param print_interval:
+    :param return_history:
+    :param verbose:
+    """
     location_indexes = np.array(location_indexes)
 
     pop = init_population(
@@ -147,19 +162,6 @@ def genetic_algorithm(
     if return_history:
         return best, score
     return best
-
-# Not called an may be removed
-# def convert_address_id_to_address(best: list, address_list: list):
-#     """
-#     """
-# delivery_route_address = []
-
-#     # Get the addresses in the route
-#     for address_id in best:
-#         for address_index, address in enumerate(address_list):
-#             if address_id == address_index:
-#                 delivery_route_address.append(address)
-#     return delivery_route_address
 
 
 def truck_finish_time(truck: Truck, score: float) -> str:
