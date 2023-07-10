@@ -148,37 +148,51 @@ def genetic_algorithm(
         return best, score
     return best
 
+# Not called an may be removed
+# def convert_address_id_to_address(best: list, address_list: list):
+#     """
+#     """
+# delivery_route_address = []
 
-def convert_address_id_to_address(hash_map: HashTable, best: list, address_list: list):
-    delivery_route_address = []
-    delivery_route_package_id = []
-
-    # Get the addresses in the route
-    for address_id in best:
-        for address_index, address in enumerate(address_list):
-            if address_id == address_index:
-                delivery_route_address.append(address)
-    return delivery_route_address  # , delivery_route_package_id
+#     # Get the addresses in the route
+#     for address_id in best:
+#         for address_index, address in enumerate(address_list):
+#             if address_id == address_index:
+#                 delivery_route_address.append(address)
+#     return delivery_route_address
 
 
-def truck_finish_time(truck: Truck, score: float):
-    departure_time = convert_to_hours(truck.departure_time)
-    total_time = departure_time + score / truck.speed
-    return hours_to_string(total_time)
+def truck_finish_time(truck: Truck, score: float) -> str:
+    """Determine the finish time of the truck for the route distance
+    :param truck: truck object
+    :param score: the distance of the route in miles
+    :return: string of the time the truck returns to the hub
+    Big(O): O(1)"""
+    departure_hours = convert_to_hours(truck.departure_time)
+    finish_hours = departure_hours + score / truck.speed
+    return hours_to_string(finish_hours)
 
 
 def hours_to_string(some_time: float) -> str:
-    # TODO: there was a case where the number of seconds was 60. This should be an additional minute. Need to check for minutes too
+    """Convert hours as a float to a time as in hh:mm:ss as a string
+    :param some_time: hours as a float
+    :return: string of the time in the format hh:mm:ss in 24 hour time
+    Big(O): O(1)"""
     hours = int(some_time - (some_time % 1))
     minutes = (some_time % 1) * 60
     seconds = (minutes % 1) * 60
-    minutes = int(minutes)
+    minutes = int(round(minutes, 0))
     seconds = int(round(seconds, 0))
+    if seconds == 60:
+        minutes += 1
+        seconds = 0
+    if minutes == 60:
+        hours += 1
+        minutes = 0
     if 0 <= hours < 10:
         hours_str = "0" + str(int(hours))
     else:
         hours_str = str(hours)
-
     if 0 <= minutes < 10:
         minutes_str = "0" + str(minutes)
     else:
@@ -190,11 +204,6 @@ def hours_to_string(some_time: float) -> str:
         seconds_str = str(seconds)
 
     return f"{hours_str}:{minutes_str}:{seconds_str}"
-
-
-def package_delivery_time(departure_time: str, elasped_time: str) -> str:
-    depart_hours = convert_to_hours(departure_time)
-    delivery_hour = depart_hours + convert_to_hours(elasped_time)
 
 
 def delivery_times(
@@ -244,9 +253,7 @@ def delivery_times(
             for p in packages:
                 stop_route_package.append(p.id)
                 departure_time = convert_to_hours(truck.departure_time)
-                total_time = convert_to_hours(truck.departure_time) + (
-                    total_distance / truck.speed
-                )
+                total_time = departure_time + (total_distance / truck.speed)
                 p.delivery_time = hours_to_string(total_time)
                 p.departure_time = truck.departure_time
                 delivery_time = p.delivery_time
