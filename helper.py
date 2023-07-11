@@ -291,7 +291,7 @@ def display_package_data_at_time(some_time: str, hash_table: HashTable):
     # check to see if the delivery time of the package is less than or
     # equal to some_time
     table_list = [
-        ["Package ID", "Delivery Address", "Truck Number", "Status", "Time of Delivery"]
+        ["Package ID", "Address", "City", "Zip", "Truck Number", "Status", "Deadline", "Time of Delivery"]
     ]
     package_id_list = [id for id in range(1, hash_table.get_number_of_packages() + 1)]
     package_id_list.sort()
@@ -301,17 +301,22 @@ def display_package_data_at_time(some_time: str, hash_table: HashTable):
         temp = []
         temp.append(package.id)
         temp.append(package.address)
+        temp.append(package.city)
+        temp.append(package.zipcode)
         temp.append(package.truck_id)
 
         package_delivery = convert_to_hours(package.delivery_time)
         if package_delivery <= some_time_float:
             temp.append("Delivered")
+            temp.append(package.deadline)
             temp.append(package.delivery_time)
         elif convert_to_hours(package.departure_time) <= some_time_float:
             temp.append("In Route")
+            temp.append(package.deadline)
             temp.append(f"ETA: {package.delivery_time}")
         else:
             temp.append("At Hub")
+            temp.append(package.deadline)
             temp.append(f"ETA: {package.delivery_time}")
         table_list.append(temp)
 
