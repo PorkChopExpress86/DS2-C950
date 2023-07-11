@@ -23,10 +23,10 @@ while True:
     print(
         "Enter the number of [bold magenta]iterations[/bold magenta] for the genetic algorithm to solve the route for each truck. [bold green]Default is 1000 iterations[/bold green], [red]a larger number will take longer[/red], [green]but can get a shorter route.[/green]"
     )
-    n_iters = input("Number of Iterations (press Enter for 100): ")
+    n_iters = input("Number of Iterations (press Enter for 1000): ")
     if n_iters == "":
-        print("[blue]Default settings, 100 iterations...")
-        n_iters = 100
+        print("[blue]Default settings, 1000 iterations...")
+        n_iters = 1000
         break
     else:
         try:
