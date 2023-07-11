@@ -3,7 +3,7 @@ from HashTable import HashTable
 from Package import Package
 from Truck import Truck
 
-np.random.seed(42)
+np.random.seed()
 
 
 # Create a population of some paths to start as the parents
@@ -107,7 +107,7 @@ class GeneticRoute:
         :param chromosome: one of the routes from bag (np.array())
         :return: distance of the route
         Big(O): O(n) to loop the locations in a route, but there is a call to address_index_to_package_id that is O(n+n^2). The overall complexity to
-        run this method is O(n+n+n^2)
+        run this method is O(n(n+n+n)) or O(n^2)
         """
         total_distance = 0
         full_route = np.insert(chromosome, 0, 0)
@@ -115,26 +115,44 @@ class GeneticRoute:
         for i in range(len(full_route) - 1):
             total_distance += self.adjacency_mat[full_route[i], full_route[i + 1]]
 
-            # Loop over the address indexes
+            # Loop over the route
             if full_route[i] != 0:
+                # Get the index of the first stop
                 address_index = int(full_route[i])
-                # Convert the address index -> package object
-                package = self.address_index_to_package_id(address_index)
-                deadline_str = package.deadline
-                if deadline_str != "EOD":
-                    # Time to deliver the package in hours
-                    time_to_delivery = total_distance / self.truck.speed
 
-                    # The total distance up to the address divided by the speed (18 mph) will determine
-                    # if the deadline can be met.If the deadline cannot be met then add 100 miles to the route.
-                    deadline = _convert_to_hours(package.deadline)
-                    departure = _convert_to_hours(self.truck.departure_time)
+                
+                # Get the address of the address index
+                for key, value in self.address_dict.items():
+                    if address_index == value:
+                        address = key
+                
+                # Get the packages that will be delivered at that address, that are on the same truck
+                packages = []
+                for i in range(len(self.hash_table.data_map)):
+                    if self.hash_table.data_map[i] is not None:
+                        for j in range(len(self.hash_table.data_map[i])):
+                            package = self.hash_table.data_map[i][j][1]
+                            if package.address == address and package.id in self.truck.packages:
+                                packages.append(package)
 
-                    # Time to the deadline will be the deadline minus the departure in hours
-                    time_to_deadline = deadline - departure
+                for package in packages:
+                # # Convert the address index -> package objects
+                    # package = self.address_index_to_package_id(address_index)
+                    deadline_str = package.deadline
+                    if deadline_str != "EOD":
+                        # Time to deliver the package in hours
+                        time_to_delivery = total_distance / self.truck.speed
 
-                    if time_to_deadline < time_to_delivery:
-                        total_distance += 100
+                        # The total distance up to the address divided by the speed (18 mph) will determine
+                        # if the deadline can be met.If the deadline cannot be met then add 100 miles to the route.
+                        deadline = _convert_to_hours(package.deadline)
+                        departure = _convert_to_hours(self.truck.departure_time)
+
+                        # Time to the deadline will be the deadline minus the departure in hours
+                        time_to_deadline = deadline - departure
+
+                        if time_to_deadline < time_to_delivery:
+                            total_distance += 100
 
         return total_distance
 
