@@ -23,7 +23,7 @@ class Package:
         deadline: str,
         weight: str,
         note: str,
-        status: str = "At Hub",
+        # status: str = "At Hub",
     ) -> None:
         self.id = package_id
         self.address = address
@@ -32,10 +32,11 @@ class Package:
         self.zipcode = zipcode
         self.deadline = deadline
         self.weight = int(weight)
-        self.status = status
+        # self.status = status
         self.note = note
         self.departure_time = None
         self.delivery_time = None
+        self.truck_id = None
 
     def __str__(self) -> str:
         return (

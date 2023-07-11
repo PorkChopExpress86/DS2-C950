@@ -1,12 +1,14 @@
-from helper import *
+from Helper import *
 from Genetic import *
 from Truck import Truck
-from Package import Package
+
+# from Package import Package
 import os
 from rich import print
 
 
 def clear_console():
+    """Clear console for windows, mac and linux"""
     if os.name == "nt":
         _ = os.system("cls")
     else:
@@ -16,14 +18,15 @@ def clear_console():
 # Clear console
 clear_console()
 
+# User input on how many iterations for the genetic algorithm
 while True:
     print(
         "Enter the number of [bold magenta]iterations[/bold magenta] for the genetic algorithm to solve the route for each truck. [bold green]Default is 1000 iterations[/bold green], [red]a larger number will take longer[/red], [green]but can get a shorter route.[/green]"
     )
-    n_iters = input("Number of Iterations (press Enter for 1000): ")
+    n_iters = input("Number of Iterations (press Enter for 100): ")
     if n_iters == "":
-        print("[blue]Default settings, 1000 iterations...")
-        n_iters = 1000
+        print("[blue]Default settings, 100 iterations...")
+        n_iters = 100
         break
     else:
         try:
@@ -50,10 +53,11 @@ print("[blue]Setting up data structures...[/blue]")
 hash_map = fill_hash_table("CSVFiles/packages.csv")
 
 # Create distance matrix
-distance_array = create_distance_matrix("CSVFiles/distance_table.csv")
+distance_matrix = create_distance_matrix("CSVFiles/distance_table.csv")
 
 # Create address index
 address_index = create_address_dict("CSVFiles/addresses.csv")
+
 
 # Set up parameters and create truck objects
 # truck_packages = {}
@@ -72,6 +76,11 @@ truck3 = Truck(
 # Load packages in trucks
 load_truck_easy()
 
+# Fill truck ids in packages
+fill_package_truck_id(hash_map, truck1)
+fill_package_truck_id(hash_map, truck2)
+fill_package_truck_id(hash_map, truck3)
+
 proceed = False
 while proceed == False:
     print("[green]Determining truck 1 route...[/green]")
@@ -82,11 +91,11 @@ while proceed == False:
 
     best1, score1 = genetic_algorithm(
         truck1_package_indexes,
-        np.asarray(distance_array),
+        np.asarray(distance_matrix),
         address_index,
         hash_map,
         truck1,
-        n_iter=n_iters,
+        num_iter=n_iters,
         return_history=True,
         verbose=False,
     )
@@ -105,11 +114,11 @@ while proceed == False:
 
     best2, score2 = genetic_algorithm(
         truck2_package_indexes,
-        np.asarray(distance_array),
+        np.asarray(distance_matrix),
         address_index,
         hash_map,
         truck2,
-        n_iter=n_iters,
+        num_iter=n_iters,
         return_history=True,
         verbose=False,
     )
@@ -133,11 +142,11 @@ while proceed == False:
 
     best3, score3 = genetic_algorithm(
         truck3_package_indexes,
-        np.asarray(distance_array),
+        np.asarray(distance_matrix),
         address_index,
         hash_map,
         truck3,
-        n_iter=n_iters,
+        num_iter=n_iters,
         return_history=True,
         verbose=False,
     )
@@ -156,7 +165,7 @@ while proceed == False:
 
 print(f"[bold magenta]Total trip disance is {total_distance:.2f} miles.[/bold magenta]")
 
-distance_mat = np.asarray(distance_array)
+distance_mat = np.asarray(distance_matrix)
 
 print("[blue]Updating package data...[/blue]")
 truck1_route = delivery_times(truck1, best1, distance_mat, address_index, hash_map)

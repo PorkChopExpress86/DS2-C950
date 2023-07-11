@@ -3,7 +3,8 @@ from Package import Package
 
 class HashTable:
     """Custom python class that will create a hash table of some size (13 by default). Python's hash function is used
-    to create the
+    to create the hash quickly. A prime number for size should be used to minimize collisions.
+    Insert if O(1) look ups are O(n) in worst case, but O(1) in best case.
     """
 
     def __init__(self, size=13):
@@ -22,12 +23,18 @@ class HashTable:
         return hash(key) % len(self.data_map)
 
     def insert(self, key: int, value: Package) -> None:
+        """Insert a package in the hashtable
+        Big(O): O(1)"""
         index = self.__hash(key)
         if self.data_map[index] is None:
             self.data_map[index] = []
         self.data_map[index].append([key, value])
 
     def get_item(self, key: int) -> Package or None:
+        """Return an item from the hash table using the id of the package
+        :param key: integer of the package id
+        :return Package: if found a package object will be returned
+        Big(O): O(n)"""
         # get the index
         index = self.__hash(key)
         # if the address is not none
@@ -41,6 +48,10 @@ class HashTable:
         return None
 
     def remove_item(self, key: int) -> None:
+        """Remove item from the hash table
+        :param key: integer of the package id
+        :return: None
+        Big(O): O(n)"""
         index = self.__hash(key)
         if self.data_map[index] is not None:
             for i in range(len(self.data_map[index])):
@@ -48,6 +59,9 @@ class HashTable:
                     del self.data_map[index][i]
 
     def keys(self) -> list:
+        """Get a list of all the keys in the hash table
+        :return list: of all keys
+        Big(O): O(n^2)"""
         all_keys = []
         # Loop over all the indexes
         for i in range(len(self.data_map)):
@@ -61,10 +75,12 @@ class HashTable:
             print(i, ": ", val)
 
     def get_number_of_packages(self) -> int:
+        """Get the number of packages available in the hash table
+        Big(O):O(n^2) since it will call the keys function"""
         return max(self.keys())
 
 
-# Python tests
+# pytest
 def fill_hash_table():
     test_data = [
         [1, "Citizen Kane - 1941"],

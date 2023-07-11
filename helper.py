@@ -158,7 +158,9 @@ def genetic_algorithm(
             best = np.append(best, 0)
             score = route.score
         children = route.mutate(prob_cross, prob_mut)
-        route = GeneticRoute(children, route.adjacency_mat, address_index, hash_map, truck)
+        route = GeneticRoute(
+            children, route.adjacency_mat, address_index, hash_map, truck
+        )
     if return_history:
         return best, score
     return best

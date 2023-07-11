@@ -63,7 +63,6 @@ def _convert_to_hours(some_time: str) -> float:
 
 
 class GeneticRoute:
-    
     def __init__(
         self,
         bag,
