@@ -98,11 +98,11 @@ def create_address_dict_int_to_address(addresses_csv_path):
     :return: dictionary with address as the key and int as the value.
     Big(O): O(n) looping over each line in the csv
     """
-    address_dict = {}
+    address_mat = {}
     with open(addresses_csv_path) as csv_file:
         for index, line in enumerate(csv_file):
-            address_dict[index] = line.replace("\n", "").split(",")[1]
-    return address_dict
+            address_mat[index] = line.replace("\n", "").split(",")[1]
+    return address_mat
 
 
 def genetic_algorithm(
@@ -111,11 +111,11 @@ def genetic_algorithm(
     address_index,
     hash_map,
     truck,
-    n_population=25,
-    n_iter=1000,
+    num_population=25,
+    num_iter=1000,
     selectivity=0.15,
-    p_cross=0.5,
-    p_mut=0.1,
+    prob_cross=0.5,
+    prob_mut=0.1,
     print_interval=100,
     return_history=False,
     verbose=False,
@@ -137,28 +137,28 @@ def genetic_algorithm(
     """
     location_indexes = np.array(location_indexes)
 
-    pop = init_population(
-        location_indexes, adjacency_mat, address_index, n_population, hash_map, truck
+    route = init_genetic_route(
+        location_indexes, adjacency_mat, address_index, num_population, hash_map, truck
     )
 
-    best = pop.best
+    best = route.best
     score = float("inf")
     history = []
 
-    for i in range(n_iter):
-        pop.select(n_population * selectivity)
-        history.append(pop.score)
+    for i in range(num_iter):
+        route.select(num_population * selectivity)
+        history.append(route.score)
         if verbose:
-            print(f"Generation {i}: {pop.score}")
+            print(f"Generation {i}: {route.score}")
         # elif i % print_interval == 0:
         #     print(f"Generation {i}: {pop.score}")
-        if pop.score < score:
-            best = pop.best
+        if route.score < score:
+            best = route.best
             best = np.insert(best, 0, 0)
             best = np.append(best, 0)
-            score = pop.score
-        children = pop.mutate(p_cross, p_mut)
-        pop = Population(children, pop.adjacency_mat, address_index, hash_map, truck)
+            score = route.score
+        children = route.mutate(prob_cross, prob_mut)
+        route = GeneticRoute(children, route.adjacency_mat, address_index, hash_map, truck)
     if return_history:
         return best, score
     return best
@@ -288,7 +288,9 @@ def display_package_data_at_time(some_time: str, hash_table: HashTable):
     # Since we will already know what time the package will be delivered,
     # check to see if the delivery time of the package is less than or
     # equal to some_time
-    table_list = [["Package ID", "Delivery Address", "Status", "Time of Delivery"]]
+    table_list = [
+        ["Package ID", "Delivery Address", "Truck Number", "Status", "Time of Delivery"]
+    ]
     package_id_list = [id for id in range(1, hash_table.get_number_of_packages() + 1)]
     package_id_list.sort()
 
@@ -297,6 +299,7 @@ def display_package_data_at_time(some_time: str, hash_table: HashTable):
         temp = []
         temp.append(package.id)
         temp.append(package.address)
+        temp.append(package.truck_id)
 
         package_delivery = convert_to_hours(package.delivery_time)
         if package_delivery <= some_time_float:
@@ -314,3 +317,15 @@ def display_package_data_at_time(some_time: str, hash_table: HashTable):
     table = PrettyTable(table_list[0])
     table.add_rows(table_list[1:])
     print(table)
+
+
+def fill_package_truck_id(hash_table: HashTable, truck: Truck) -> None:
+    """Add the truck_id to the packge for the display table by looping over truck.packages
+    :param hash_table: hash table of the packages for easy look up
+    :param truck: the truck object
+    :return: None
+    """
+
+    for package_id in truck.packages:
+        package = hash_table.get_item(package_id)
+        package.truck_id = truck.id
