@@ -7,7 +7,7 @@ np.random.seed(42)
 
 
 # Create a population of some paths to start as the parents
-def init_population(
+def init_genetic_route(
     package_list,
     adjacency_mat,
     address_dict,
@@ -27,7 +27,7 @@ def init_population(
 
     Big(O): O(n) since it will loop over all packages in the truck
     """
-    return Population(
+    return GeneticRoute(
         np.asarray([np.random.permutation(package_list) for _ in range(n_population)]),
         adjacency_mat,
         address_dict,
@@ -62,7 +62,8 @@ def _convert_to_hours(some_time: str) -> float:
     return hrs
 
 
-class Population:
+class GeneticRoute:
+    
     def __init__(
         self,
         bag,
@@ -192,21 +193,21 @@ class Population:
                 children.append(child)
         return children
 
-    def mutate(self, p_cross=0.1, p_mut=0.1):
+    def mutate(self, prob_cross=0.1, prob_mut=0.1):
         """
         :parm p_cross: probability to create a random part for another route
         :parm p_mut: probablity to perform a swap on the route/chromosome
         :return: next_bag a list of the next children of the previous generation
         Big(O): O(n) looping over the list of children
         """
-        next_bag = []
-        children = self.crossover(p_cross)
+        bag2 = []
+        children = self.crossover(prob_cross)
         for child in children:
-            if np.random.rand() < p_mut:
-                next_bag.append(swap(child))
+            if np.random.rand() < prob_mut:
+                bag2.append(swap(child))
             else:
-                next_bag.append(child)
-        return next_bag
+                bag2.append(child)
+        return bag2
 
     def convert_address_index_to_package_id(self):
         """
