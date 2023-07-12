@@ -64,6 +64,8 @@ def _convert_to_hours(some_time: str) -> float:
 
 
 class GeneticRoute:
+    """This class will be used to determine a route for the trucks"""
+
     def __init__(
         self,
         bag,
@@ -121,23 +123,25 @@ class GeneticRoute:
                 # Get the index of the first stop
                 address_index = int(full_route[i])
 
-                
                 # Get the address of the address index
                 for key, value in self.address_dict.items():
                     if address_index == value:
                         address = key
-                
+
                 # Get the packages that will be delivered at that address, that are on the same truck
                 packages = []
                 for i in range(len(self.hash_table.data_map)):
                     if self.hash_table.data_map[i] is not None:
                         for j in range(len(self.hash_table.data_map[i])):
                             package = self.hash_table.data_map[i][j][1]
-                            if package.address == address and package.id in self.truck.packages:
+                            if (
+                                package.address == address
+                                and package.id in self.truck.packages
+                            ):
                                 packages.append(package)
 
                 for package in packages:
-                # # Convert the address index -> package objects
+                    # # Convert the address index -> package objects
                     # package = self.address_index_to_package_id(address_index)
                     deadline_str = package.deadline
                     if deadline_str != "EOD":
@@ -213,6 +217,7 @@ class GeneticRoute:
 
     def mutate(self, prob_cross=0.1, prob_mut=0.1):
         """
+        This will call crossover to mix up the route and has a probably change to swap some of the address
         :parm p_cross: probability to create a random part for another route
         :parm p_mut: probablity to perform a swap on the route/chromosome
         :return: next_bag a list of the next children of the previous generation
