@@ -11,7 +11,7 @@ def init_genetic_route(
     package_list,
     adjacency_mat,
     address_dict,
-    n_population,
+    n_routes,
     hash_table: HashTable,
     truck: Truck,
 ):
@@ -29,7 +29,7 @@ def init_genetic_route(
     Big(O): O(n) since it will loop over all packages in the truck
     """
     return GeneticRoute(
-        np.asarray([np.random.permutation(package_list) for _ in range(n_population)]),
+        np.asarray([np.random.permutation(package_list) for _ in range(n_routes)]),
         adjacency_mat,
         address_dict,
         hash_table,
