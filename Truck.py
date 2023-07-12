@@ -19,9 +19,7 @@ class Truck:
     ) -> None:
         self.id = truck_num
         self.speed = speed
-        self.hp_packages: list = []  # hp=high priority packages with deadlines
-        self.packages: list = []  # packages with no deadlines
-        self.delivered_packages: list = []
+        self.packages: list = []
         self.route: list = []
         self.total_distance: float = 0.0
         self.departure_time: str = departure_time
@@ -31,28 +29,18 @@ class Truck:
         self.package_addresses = []
 
     def add_package(self, package_id: int) -> bool:
+        """Add package to truck
+        Big(O): O(1)"""
         if self.is_full:
             return False
         self.packages.append(package_id)
         return True
 
-    def add_hp_package(self, package_id: int) -> bool:
-        if self.is_full:
-            return False
-        self.hp_packages.append(package_id)
-        return True
-
     def print_packages(self) -> None:
+        """Print the packages, used for debugging
+        Big(O): O(n)"""
         for package in self.packages:
             print(package)
-
-    def distance(self, current_time: str):
-        if self.finish_time == "":
-            current_hrs = _convert_to_hours(current_time)
-        else:
-            current_hrs = _convert_to_hours(self.finish_time)
-        depart_hours = _convert_to_hours(self.departure_time)
-        return (current_hrs - depart_hours) * self.speed
 
     @property
     def count_packages(self) -> int:
@@ -65,6 +53,7 @@ class Truck:
         return False
 
 
+# Pytest for the truck class
 def test_truck():
     truck1 = Truck(1, 18)
     assert truck1.id == 1
