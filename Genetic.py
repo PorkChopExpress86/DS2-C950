@@ -141,8 +141,6 @@ class GeneticRoute:
                                 packages.append(package)
 
                 for package in packages:
-                    # # Convert the address index -> package objects
-                    # package = self.address_index_to_package_id(address_index)
                     deadline_str = package.deadline
                     if deadline_str != "EOD":
                         # Time to deliver the package in hours
