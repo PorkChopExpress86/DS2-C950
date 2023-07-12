@@ -3,7 +3,7 @@ from HashTable import HashTable
 from Package import Package
 from Truck import Truck
 
-np.random.seed()
+np.random.seed(42)
 
 
 # Create a population of some paths to start as the parents
@@ -18,6 +18,7 @@ def init_genetic_route(
     """
     Initiate the parents of the generic algorithm. These routes will be the founders of the where the algorithm
     will improve.
+    Big(O): O(n) where n = n_population
 
     :param package_list: list of the package id's to be delivered
     :param adjacency_mat: the distance matrix of the addresses
