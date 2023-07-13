@@ -10,13 +10,7 @@ def _convert_to_hours(some_time: str) -> float:
 
 
 class Truck:
-    def __init__(
-        self,
-        truck_num: int,
-        speed: int,
-        location: str,
-        departure_time: str = "08:00:00",
-    ) -> None:
+    def __init__(self, truck_num: int, speed: int, location: str, departure_time: str = "08:00:00", ) -> None:
         self.id = truck_num
         self.speed = speed
         self.packages: list = []
