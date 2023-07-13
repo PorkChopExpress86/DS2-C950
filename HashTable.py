@@ -4,7 +4,7 @@ from Package import Package
 class HashTable:
     """Custom python class that will create a hash table of some size (13 by default). Python's hash function is used
     to create the hash quickly. A prime number for size should be used to minimize collisions.
-    Insert if O(1) look ups are O(n) in worst case, but O(1) in best case.
+    Insert if O(1) look-ups are O(n) in worst case, but O(1) in best case.
     """
 
     def __init__(self, size=13):
@@ -13,17 +13,20 @@ class HashTable:
         :param size:  of the list. Recommended to be a prime number
         to properly reduce collisions.
         """
-        self.data_map = [None] * size
+        self.data_map: list = [None] * size
 
     def __hash(self, key: int) -> int:
         """Creates a hash of the key
-        :param key: id or key of an item
-        :return: the location of the
+        :param key: id or key of item
+        :return: integer of the bucket for the hash table
         """
-        return hash(key) % len(self.data_map)
+        return key % len(self.data_map)
 
     def insert(self, key: int, value: Package) -> None:
         """Insert a package in the hashtable
+        :param key: package id
+        :param value: the package object
+        :return: None
         Big(O): O(1)"""
         index = self.__hash(key)
         if self.data_map[index] is None:
@@ -32,7 +35,7 @@ class HashTable:
 
     def get_item(self, key: int) -> Package or None:
         """Return an item from the hash table using the id of the package
-        :param key: integer of the package id
+        :param key: id of the pacakge
         :return Package: if found a package object will be returned
         Big(O): O(n)"""
         # get the index
