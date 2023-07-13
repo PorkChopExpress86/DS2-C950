@@ -1,16 +1,12 @@
-from HashTable import HashTable
-from Package import Package
-from Truck import Truck
 import csv
-import numpy as np
-from Genetic import *
+
 from prettytable import PrettyTable
+
+from Genetic import *
 
 
 def fill_hash_table(packages_csv: str) -> HashTable:
-    """
-    Fill hashtable with the package objects, using the package's id as the key.
-
+    """Fill hashtable with the package objects, using the package's id as the key.
     :param packages_csv: string path to the packages.csv
     :return: HashTable of the package objects
     Big(O): O(n) looping over the csv file line by line to fill the hashTable
@@ -27,9 +23,7 @@ def fill_hash_table(packages_csv: str) -> HashTable:
 
 
 def create_distance_matrix(distance_table_path: str) -> list:
-    """
-    Create 2D list of distances without header or addresses, and convert all the strings to float or None.
-
+    """Create 2D list of distances without header or addresses, and convert all the strings to float or None.
     :param distance_table_path:
     :return: list of a list containing the distance matrix
     Big(O): O(n) since there is a for loop going over every line in the csv
@@ -44,6 +38,7 @@ def create_distance_matrix(distance_table_path: str) -> list:
 
 
 def convert_to_hours(some_time: str) -> float:
+    """Convert a string format as hh:mm:ss to a float representing hours"""
     h, m, s = some_time.split(":")
     hrs = float(h)
     hrs += float(m) / 60
@@ -52,11 +47,9 @@ def convert_to_hours(some_time: str) -> float:
 
 
 def create_address_dict(addresses_csv_path):
-    """
-    Create a dictionary of the address and their index. The address is the key and the index are the value.
+    """Create a dictionary of the address and their index. The address is the key and the index are the value.
     This will be used in the package look up and for the distance table lookup, the higher value will go to
     the row and the lower number will be the column.
-
     :param addresses_csv_path: string path of the csv containing all the address
     :return: dictionary with address as the key and int as the value.
     Big(O): O(n) looping over each line in the csv
@@ -77,7 +70,7 @@ def create_address_list(addresses_csv_path):
 
 
 def convert_package_id_to_address_index(
-    truck_packages: list, addresses_index: dict, hash_map: HashTable
+        truck_packages: list, addresses_index: dict, hash_map: HashTable
 ) -> list:
     """Convert the trucks package list of id's into the indexes of the address list"""
     truck_address_list = []
@@ -106,52 +99,44 @@ def create_address_dict_int_to_address(addresses_csv_path):
 
 
 def genetic_algorithm(
-    location_indexes,
-    adjacency_mat,
-    address_index,
-    hash_map,
-    truck,
-    num_population=25,
-    num_iter=1000,
-    selectivity=0.15,
-    prob_cross=0.5,
-    prob_mut=0.1,
-    print_interval=100,
-    return_history=False,
-    verbose=False,
+        location_indexes,
+        adjacency_mat,
+        address_index,
+        hash_map,
+        truck,
+        num_population=25,
+        num_iter=1000,
+        selectivity=0.15,
+        prob_cross=0.5,
+        prob_mut=0.2,
+        verbose=False
 ):
     """Method to call the genetic algorith to find an optimal route
-    :param location_indexes:
-    :param adjacency_mat:
-    :param address_index:
-    :param hash_map:
-    :param truck:
-    :param n_population:
-    :param n_iter:
-    :param selectivity:
-    :param p_cross:
-    :param p_mut:
-    :param print_interval:
-    :param return_history:
-    :param verbose:
+    :param location_indexes: list of the location indexes (values in the address_dict)
+    :param adjacency_mat: matrix with the distances between the locations
+    :param address_index: dictionary with keys as the address string and the value as the index in the adjacency matrix
+    :param hash_map: hash table of the packages with key as the package id
+    :param truck: truck object
+    :param num_population: the amount for the initial population
+    :param num_iter: number of iterations for the algorithm to complete
+    :param selectivity: probability to select a route
+    :param prob_cross: probability to do a cross-over
+    :param prob_mut: probability to do a swap
+    :param verbose: print the generation and the score to see progress
     """
     location_indexes = np.array(location_indexes)
 
     route = init_genetic_route(
         location_indexes, adjacency_mat, address_index, num_population, hash_map, truck
     )
-
-    best = route.best
     score = float("inf")
-    history = []
-
+    best = route.best
     for i in range(num_iter):
         route.select(num_population * selectivity)
-        history.append(route.score)
+
         if verbose:
-            print(f"Generation {i}: {route.score}")
-        # elif i % print_interval == 0:
-        #     print(f"Generation {i}: {pop.score}")
+            if i % 100 == 0:
+                print(f"Generation - {i}: {route.score}")
         if route.score < score:
             best = route.best
             best = np.insert(best, 0, 0)
@@ -161,9 +146,7 @@ def genetic_algorithm(
         route = GeneticRoute(
             children, route.adjacency_mat, address_index, hash_map, truck
         )
-    if return_history:
-        return best, score
-    return best
+    return best, score
 
 
 def truck_finish_time(truck: Truck, score: float) -> str:
@@ -211,20 +194,22 @@ def hours_to_string(some_time: float) -> str:
 
 
 def delivery_times(
-    truck: Truck,
-    route: list,
-    distance_mat: list,
-    address_index: dict,
-    hash_table: HashTable,
+        truck: Truck,
+        route: list,
+        distance_mat: list,
+        address_index: dict,
+        hash_table: HashTable,
 ) -> list:
     """Enter the times the packages on the truck will be delivered to the address
     given the route by the genetic algorithm. The route is a list of the address indexes,
     not the package ids
-
     :param truck: Truck class of the truck that contains the packages
     :param route: List of the address indexes in the order of the route. Each index may have many packages
     :param distance_mat: the 2d list of the distance matrix
+    :param address_index: dictionary that has address string as key and index as value
+    :param hash_table: hash table of the packages with package id as the keys
     :return: None
+    Big(O): O(n^2)
     """
     total_distance = 0
     deliver_route = []
@@ -254,6 +239,7 @@ def delivery_times(
                             packages.append(package)
             stop_route_package = []
             delivery_time = 0
+            # Loop over packages and set the departure and delivery time in the package object
             for p in packages:
                 stop_route_package.append(p.id)
                 departure_time = convert_to_hours(truck.departure_time)
@@ -270,12 +256,14 @@ def delivery_times(
 
 
 def display_package_data_at_time(some_time: str, hash_table: HashTable):
-    """Loop over all of the packages in the hashtable to check the delivery
+    """Loop over all the packages in the hashtable to check the delivery
     times against some_time. Since we will already know what time the package
     will be delivered, check to see if the delivery time of the package is less
     than or equal to some_time.
     :param some_time: string format that the user will enter as "hh:mm:ss"
-    :return: None, it will print the status of all of the packages.
+    :param hash_table: hash table of the packages with package id as the keys
+    :return: None, it will print the status of all the packages.
+    Big(O): O(n)
     """
     some_time_float = convert_to_hours(some_time)
 
@@ -286,7 +274,7 @@ def display_package_data_at_time(some_time: str, hash_table: HashTable):
     else:
         hash_table.get_item(9).address = "410 S State St"
 
-    # Loop over all of the packages in the hashtable to check
+    # Loop over all the packages in the hashtable to check
     # Since we will already know what time the package will be delivered,
     # check to see if the delivery time of the package is less than or
     # equal to some_time
@@ -298,12 +286,7 @@ def display_package_data_at_time(some_time: str, hash_table: HashTable):
 
     for package_id in package_id_list:
         package = hash_table.get_item(package_id)
-        temp = []
-        temp.append(package.id)
-        temp.append(package.address)
-        temp.append(package.city)
-        temp.append(package.zipcode)
-        temp.append(package.truck_id)
+        temp = [package.id, package.address, package.city, package.zipcode, package.truck_id]
 
         package_delivery = convert_to_hours(package.delivery_time)
         if package_delivery <= some_time_float:
@@ -327,12 +310,11 @@ def display_package_data_at_time(some_time: str, hash_table: HashTable):
 
 
 def fill_package_truck_id(hash_table: HashTable, truck: Truck) -> None:
-    """Add the truck_id to the packge for the display table by looping over truck.packages
+    """Add the truck_id to the package for the display table by looping over truck.packages
     :param hash_table: hash table of the packages for easy look up
     :param truck: the truck object
     :return: None
     """
-
     for package_id in truck.packages:
         package = hash_table.get_item(package_id)
         package.truck_id = truck.id
