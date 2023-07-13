@@ -1,4 +1,5 @@
 import numpy as np
+
 from HashTable import HashTable
 from Package import Package
 from Truck import Truck
@@ -8,12 +9,12 @@ np.random.seed(42)
 
 # Create a population of some paths to start as the parents
 def init_genetic_route(
-    package_list,
-    adjacency_mat,
-    address_dict,
-    n_routes,
-    hash_table: HashTable,
-    truck: Truck,
+        package_list,
+        adjacency_mat,
+        address_dict,
+        num_routes,
+        hash_table: HashTable,
+        truck: Truck,
 ):
     """
     Initiate the parents of the generic algorithm. These routes will be the founders of the where the algorithm
@@ -23,13 +24,15 @@ def init_genetic_route(
     :param package_list: list of the package id's to be delivered
     :param adjacency_mat: the distance matrix of the addresses
     :param address_dict: key value dict of address as keys and address index as value
-    :param n_population: a subset of the population of route permutations
+    :param num_routes: a list of lists that contain pacakge ids in random orders
+    :param hash_table: hash table class that contains packages with the package ids
+    :param truck: truck object of a single truck
     :return: Population class
 
     Big(O): O(n) since it will loop over all packages in the truck
     """
     return GeneticRoute(
-        np.asarray([np.random.permutation(package_list) for _ in range(n_routes)]),
+        np.asarray([np.random.permutation(package_list) for _ in range(num_routes)]),
         adjacency_mat,
         address_dict,
         hash_table,
@@ -67,12 +70,12 @@ class GeneticRoute:
     """This class will be used to determine a route for the trucks"""
 
     def __init__(
-        self,
-        bag,
-        adjacency_mat: list,
-        address_dict: dict,
-        hash_table: HashTable,
-        truck: Truck,
+            self,
+            bag,
+            adjacency_mat: list,
+            address_dict: dict,
+            hash_table: HashTable,
+            truck: Truck,
     ):
         self.bag = bag
         self.parents = []
@@ -87,7 +90,9 @@ class GeneticRoute:
     def address_index_to_package_id(self, address_index: int) -> Package:
         """Convert the address index to an address and then convert the address to the package
         id by looping over the hash_table
-        Big(O) = O(n+n^2)"""
+        Big(O) = O(n^2)"""
+
+        address: str = ""
 
         # convert to address
         for key, value in self.address_dict.items():
@@ -106,11 +111,10 @@ class GeneticRoute:
     def fitness(self, chromosome) -> float:
         """
         Test the distance of a random route and check to see if the package will be delivered by the delivery time.
-        If the package will not be delivered, then the total distance will have a 1000-mile penalty.
+        If the package is not delivered, then the total distance will have a 1000-mile penalty.
         :param chromosome: one of the routes from bag (np.array())
         :return: distance of the route
-        Big(O): O(n) to loop the locations in a route, but there is a call to address_index_to_package_id that is O(n+n^2). The overall complexity to
-        run this method is O(n(n+n+n)) or O(n^2)
+        Big(O): O(n^3) There are 3 loops deep at the most
         """
         total_distance = 0
         full_route = np.insert(chromosome, 0, 0)
@@ -123,6 +127,7 @@ class GeneticRoute:
                 # Get the index of the first stop
                 address_index = int(full_route[i])
 
+                address: str = ""
                 # Get the address of the address index
                 for key, value in self.address_dict.items():
                     if address_index == value:
@@ -130,24 +135,25 @@ class GeneticRoute:
 
                 # Get the packages that will be delivered at that address, that are on the same truck
                 packages = []
-                for i in range(len(self.hash_table.data_map)):
-                    if self.hash_table.data_map[i] is not None:
-                        for j in range(len(self.hash_table.data_map[i])):
-                            package = self.hash_table.data_map[i][j][1]
+                for k in range(len(self.hash_table.data_map)):
+                    if self.hash_table.data_map[k] is not None:
+                        for j in range(len(self.hash_table.data_map[k])):
+                            package = self.hash_table.data_map[k][j][1]
                             if (
-                                package.address == address
-                                and package.id in self.truck.packages
+                                    package.address == address
+                                    and package.id in self.truck.packages
                             ):
                                 packages.append(package)
 
                 for package in packages:
                     deadline_str = package.deadline
                     if deadline_str != "EOD":
-                        # Time to deliver the package in hours
+
+                        # Deliver time as hours
                         time_to_delivery = total_distance / self.truck.speed
 
                         # The total distance up to the address divided by the speed (18 mph) will determine
-                        # if the deadline can be met.If the deadline cannot be met then add 100 miles to the route.
+                        # if the deadline can be met. If the deadline cannot be met, then add 100 miles to the route.
                         deadline = _convert_to_hours(package.deadline)
                         departure = _convert_to_hours(self.truck.departure_time)
 
@@ -178,6 +184,8 @@ class GeneticRoute:
         return distances / np.sum(distances)
 
     def select(self, k=4):
+        """Select the parents of the next generation and append them to self.parent
+        Big(O): O(n)"""
         fit = self.evaluate()
         while len(self.parents) < k:
             idx = np.random.randint(0, len(fit))
@@ -190,7 +198,7 @@ class GeneticRoute:
         Randomly pick parts of the best route and randomly create different new routes based on the parent
         :param p_cross: probability to create a random part for another route
         :return: new routes for bag.
-        Big(O) = O(n(n+n)) wich will come out to O(n^2) for the loops inside of a loop
+        Big(O) = O(n(n+n)) which will come out to O(n^2) for the loops inside a loop
         """
         children = []
         count, size = self.parents.shape
@@ -215,9 +223,9 @@ class GeneticRoute:
 
     def mutate(self, prob_cross=0.1, prob_mut=0.1):
         """
-        This will call crossover to mix up the route and has a probably change to swap some of the address
-        :parm p_cross: probability to create a random part for another route
-        :parm p_mut: probablity to perform a swap on the route/chromosome
+        This will call crossover to mix up the route and has a probably to swap some of the address indexes randomly
+        :parm prob_cross: probability to create a random part for another route
+        :parm prob_mut: probability to perform a swap on the route/chromosome
         :return: next_bag a list of the next children of the previous generation
         Big(O): O(n) looping over the list of children
         """
@@ -229,17 +237,3 @@ class GeneticRoute:
             else:
                 bag2.append(child)
         return bag2
-
-    def convert_address_index_to_package_id(self):
-        """
-        Convert the address indexes into package id's for best route.
-        Use the common part of the address to link the two together.
-        :return: list of package ids in the order of the best route
-        Big(O): O(n^2) looping over the address_dict and the best list
-        """
-        address_route = []
-
-        for key, value in self.address_dict.items():
-            for item in self.best:
-                if item == value:
-                    address_route.append(key)
