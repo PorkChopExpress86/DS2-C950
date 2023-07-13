@@ -7,6 +7,8 @@ name = "pypi"
 prettytable = "*"
 numpy = "*"
 rich = "*"
+pytest = "*"
+openpyxl = "*"
 
 [dev-packages]
 ipykernel = "*"
