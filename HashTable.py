@@ -1,6 +1,3 @@
-from Package import Package
-
-
 class HashTable:
     """Custom python class that will create a hash table of some size (13 by default). Python's hash function is used
     to create the hash quickly. A prime number for size should be used to minimize collisions.
@@ -22,7 +19,7 @@ class HashTable:
         """
         return key % len(self.data_map)
 
-    def insert(self, key: int, value: Package) -> None:
+    def insert(self, key: int, value) -> None:
         """Insert a package in the hashtable
         :param key: package id
         :param value: the package object
@@ -33,7 +30,7 @@ class HashTable:
             self.data_map[index] = []
         self.data_map[index].append([key, value])
 
-    def get_item(self, key: int) -> Package or None:
+    def get_item(self, key: int):
         """Return an item from the hash table using the id of the package
         :param key: id of the pacakge
         :return Package: if found a package object will be returned
