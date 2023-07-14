@@ -6,7 +6,6 @@ name = "pypi"
 [packages]
 prettytable = "*"
 numpy = "*"
-rich = "*"
 pytest = "*"
 openpyxl = "*"
 
