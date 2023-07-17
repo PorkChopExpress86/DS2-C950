@@ -1,6 +1,7 @@
 import csv
 
 from Genetic import *
+from Truck import Truck
 
 
 def fill_hash_table(packages_csv: str) -> HashTable:
@@ -306,9 +307,8 @@ def display_package_data_at_time(some_time: str, hash_table: HashTable):
     print(f"Package status table at {some_time}:")
 
     for row in table_list:
-        print(f"Package ID: {row[0]}\n\tTruck ID: {row[4]}"
-              f"\n\tAddress: {row[1]}\n\tCity: {row[2]}\n\tZip: {row[3]}"
-              f"\n\tDeadline: {row[6]}\n\tStatus: {row[5]}\n\tTime of Delivery: {row[7]}")
+        print(f"Package ID: {row[0]}, Truck ID: {row[4]}, Address: {row[1]}, City: {row[2]}, Zip: {row[3]}"
+              f"\n\tDeadline: {row[6]}, Status: {row[5]}, Time of Delivery: {row[7]}")
 
 
 def fill_package_truck_id(hash_table: HashTable, truck: Truck) -> None:
@@ -320,3 +320,21 @@ def fill_package_truck_id(hash_table: HashTable, truck: Truck) -> None:
     for package_id in truck.packages:
         package = hash_table.get_item(package_id)
         package.truck_id = truck.id
+
+
+def display_all_trucks_distance(some_time: str, t1: Truck, t2: Truck, t3: Truck) -> None:
+    t_list = [t1, t2, t3]
+    d_list = []
+    for t in t_list:
+        depart_time = convert_to_hours(t.departure_time)
+        current_time = convert_to_hours(some_time)
+        total_time = current_time - depart_time
+        if total_time <= 0:
+            d_list.append(0)
+        else:
+            d_list.append(total_time * t.speed)
+    print(f"Distance (miles) traveled by trucks at {some_time}]\n"
+          f"\tTruck1: {d_list[0]:.2f} miles\n"
+          f"\tTruck2: {d_list[1]:.2f} miles\n"
+          f"\tTruck3: {d_list[2]:.2f} miles\n"
+          )
