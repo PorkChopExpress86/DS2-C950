@@ -121,7 +121,7 @@ while not proceed:
     truck3_total_time = score3 / truck3.speed
     truck3.finish_time = truck_finish_time(truck3, score3)
 
-    total_distance = score1 + score2 + score2
+    total_distance = score1 + score2 + score3
     if total_distance < 140:
         proceed = True
     else:
