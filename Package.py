@@ -13,15 +13,15 @@ class Package:
     ) -> None:
         """Package class that is initialized with the following parameters
 
-        :param id (int) of the package number
-        :param address (str) destination of the package
-        :param city (str) city of the destination
-        :param state (str) state of the destination
-        :param zipcode (int) zipcode of the destination, entered as an int and stored as a string
-        :param deadline (str) deadline of when the package must be delivered, in the format of "hh:mm:ss"
-        :param weight (int) weight of the package in pounds
-        :param note (str) text of the notes of the package
-        :param status (str) of the package, at the hub, en route or delivered
+        :param id: (int) of the package number
+        :param address: (str) destination of the package
+        :param city: (str) city of the destination
+        :param state: (str) state of the destination
+        :param zipcode: (int) zipcode of the destination, entered as an int and stored as a string
+        :param deadline: (str) deadline of when the package must be delivered, in the format of "hh:mm:ss"
+        :param weight: (int) weight of the package in pounds
+        :param note: (str) text of the notes of the package
+        :param status: (str) of the package, at the hub, en route or delivered
         """
         self.id = package_id
         self.address = address
