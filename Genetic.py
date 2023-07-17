@@ -198,6 +198,7 @@ class GeneticRoute:
             distances = max(distances) - distances
 
         for i in range(len(distances)):
+            # make an array of probability of distances
             distances[i] = distances[i] / sum(distances)
         return distances
 
