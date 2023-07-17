@@ -327,8 +327,12 @@ def display_all_trucks_distance(some_time: str, t1: Truck, t2: Truck, t3: Truck)
     d_list = []
     for t in t_list:
         depart_time = convert_to_hours(t.departure_time)
+        finish_time = convert_to_hours(t.finish_time)
         current_time = convert_to_hours(some_time)
-        total_time = current_time - depart_time
+        if finish_time < current_time:
+            total_time = finish_time - depart_time
+        else:
+            total_time = current_time - depart_time
         if total_time <= 0:
             d_list.append(0)
         else:
