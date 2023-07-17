@@ -1,7 +1,5 @@
 import csv
 
-from prettytable import PrettyTable
-
 from Genetic import *
 
 
@@ -124,7 +122,7 @@ def genetic_algorithm(
     :param prob_mut: probability to do a swap
     :param verbose: print the generation and the score to see progress
     """
-    location_indexes = np.array(location_indexes)
+    # location_indexes = np.array(location_indexes)
 
     route = init_genetic_route(
         location_indexes, adjacency_mat, address_index, num_population, hash_map, truck
@@ -136,16 +134,16 @@ def genetic_algorithm(
 
         if verbose:
             if i % 100 == 0:
-                print(f"Generation - {i}: {route.score}")
+                print(f"Generation - {i}: {score}")
         if route.score < score:
             best = route.best
-            best = np.insert(best, 0, 0)
-            best = np.append(best, 0)
             score = route.score
         children = route.mutate(prob_cross, prob_mut)
         route = GeneticRoute(
             children, route.adjacency_mat, address_index, hash_map, truck
         )
+        # best.insert(0, 0)
+        # best.append(0)
     return best, score
 
 
@@ -211,11 +209,15 @@ def delivery_times(
     :return: None
     Big(O): O(n^2)
     """
+    # Add the hub as the first and last stop
+    route.insert(0, 0)
+    route.append(0)
+
     total_distance = 0
     deliver_route = []
     # get a list of the distances from one stop to the next
     for stop in range(len(route) - 1):
-        total_distance += distance_mat[route[stop], route[stop + 1]]
+        total_distance += distance_mat[route[stop]][route[stop + 1]]
 
         if route[stop + 1] != 0:
             # This list will be used to check the route
@@ -278,9 +280,7 @@ def display_package_data_at_time(some_time: str, hash_table: HashTable):
     # Since we will already know what time the package will be delivered,
     # check to see if the delivery time of the package is less than or
     # equal to some_time
-    table_list = [
-        ["Package ID", "Address", "City", "Zip", "Truck Number", "Status", "Deadline", "Time of Delivery"]
-    ]
+    table_list = []
     package_id_list = [id for id in range(1, hash_table.get_number_of_packages() + 1)]
     package_id_list.sort()
 
@@ -304,9 +304,11 @@ def display_package_data_at_time(some_time: str, hash_table: HashTable):
         table_list.append(temp)
 
     print(f"Package status table at {some_time}:")
-    table = PrettyTable(table_list[0])
-    table.add_rows(table_list[1:])
-    print(table)
+
+    for row in table_list:
+        print(f"Package ID: {row[0]}\n\tTruck ID: {row[4]}"
+              f"\n\tAddress: {row[1]}\n\tCity: {row[2]}\n\tZip: {row[3]}"
+              f"\n\tDeadline: {row[6]}\n\tStatus: {row[5]}\n\tTime of Delivery: {row[7]}")
 
 
 def fill_package_truck_id(hash_table: HashTable, truck: Truck) -> None:
