@@ -165,7 +165,9 @@ while True:
                 print("Please enter a time from 00:00:00 to 23:59:59")
             else:
                 clear_console()
+                display_all_trucks_distance(some_time, truck1, truck2, truck3)
                 display_package_data_at_time(some_time, hash_map)
+
                 x = input("Press any key to continue...")
 
         except ValueError:
