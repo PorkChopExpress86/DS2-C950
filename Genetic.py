@@ -1,10 +1,11 @@
-import numpy as np
+# import numpy as np
+import random
 
 from HashTable import HashTable
 from Package import Package
 from Truck import Truck
 
-np.random.seed(42)
+random.seed(42)
 
 
 # Create a population of some paths to start as the parents
@@ -31,8 +32,16 @@ def init_genetic_route(
 
     Big(O): O(n) since it will loop over all packages in the truck
     """
+    i = 0
+    initial_routes = []
+    while i < num_routes:
+        rand_list = random.sample(package_list, len(package_list))
+        if rand_list not in initial_routes:
+            initial_routes.append(rand_list)
+            i += 1
+
     return GeneticRoute(
-        np.asarray([np.random.permutation(package_list) for _ in range(num_routes)]),
+        initial_routes,
         adjacency_mat,
         address_dict,
         hash_table,
@@ -47,7 +56,7 @@ def swap(chromosome):
     :return: a different route
     Big(O): O(1)
     """
-    a, b = np.random.choice(len(chromosome), 2)
+    a, b = random.sample([x for x in range(len(chromosome))], 2)
     chromosome[a], chromosome[b] = (
         chromosome[b],
         chromosome[a],
@@ -79,7 +88,7 @@ class GeneticRoute:
     ):
         self.bag = bag
         self.parents = []
-        self.score = 0
+        self.score = float('inf')
         self.best = None
         self.best_route_package_id = None
         self.adjacency_mat = adjacency_mat
@@ -112,15 +121,19 @@ class GeneticRoute:
         """
         Test the distance of a random route and check to see if the package will be delivered by the delivery time.
         If the package is not delivered, then the total distance will have a 1000-mile penalty.
-        :param chromosome: one of the routes from bag (np.array())
+        :param chromosome: one of the routes from bag
         :return: distance of the route
         Big(O): O(n^3) There are 3 loops deep at the most
         """
         total_distance = 0
-        full_route = np.insert(chromosome, 0, 0)
-        full_route = np.append(full_route, 0)
+        full_route = chromosome.copy()
+        # Add the hub as the first element to be the starting location
+        full_route.insert(0, 0)
+        # Add the hub as the last element
+        full_route.append(0)
+
         for i in range(len(full_route) - 1):
-            total_distance += self.adjacency_mat[full_route[i], full_route[i + 1]]
+            total_distance += self.adjacency_mat[full_route[i]][full_route[i + 1]]
 
             # Loop over the route
             if full_route[i] != 0:
@@ -175,23 +188,28 @@ class GeneticRoute:
         for chromosome in self.bag:
             distance = self.fitness(chromosome=chromosome)
             distances.append(distance)
-        distances = np.asarray(distances)
-        self.score = np.min(distances)
-        self.best = self.bag[distances.tolist().index(self.score)]
+
+        self.score = min(distances)
+        self.best = self.bag[distances.index(self.score)]
         self.parents.append(self.best)
-        if False in (distances[0] == distances):
-            distances = np.max(distances) - distances
-        return distances / np.sum(distances)
+
+        # If there is only one element in distance
+        if len(distances) == 1:
+            distances = max(distances) - distances
+
+        for i in range(len(distances)):
+            distances[i] = distances[i] / sum(distances)
+        return distances
 
     def select(self, k=4):
-        """Select the parents of the next generation and append them to self.parent
+        """Select the parents of the next generation and append them to self.parent if it is above the random
+        distribution
         Big(O): O(n)"""
         fit = self.evaluate()
         while len(self.parents) < k:
-            idx = np.random.randint(0, len(fit))
-            if fit[idx] > np.random.rand():
+            idx = random.randint(0, len(fit) - 1)
+            if fit[idx] > random.random():
                 self.parents.append(self.bag[idx])
-        self.parents = np.asarray(self.parents)
 
     def crossover(self, p_cross=0.1):
         """
@@ -201,17 +219,25 @@ class GeneticRoute:
         Big(O) = O(n(n+n)) which will come out to O(n^2) for the loops inside a loop
         """
         children = []
-        count, size = self.parents.shape
+        # Get the dimensions of self.parents
+        count = len(self.parents)
+        size = len(self.parents[0])
+
+        # For all the routes in bag
         for _ in range(len(self.bag)):
-            if np.random.rand() > p_cross:
-                children.append(list(self.parents[np.random.randint(count, size=1)[0]]))
+            # By some change that p_cross is m
+            if random.random() > p_cross:
+                children.append(self.parents[random.randint(0, len(self.parents) - 1)])
             else:
-                parent1, parent2 = self.parents[np.random.randint(count, size=2), :]
-                idx = np.random.choice(range(size), size=2, replace=False)
+                # Select a random part of a route and fill it in with the missing stops
+                parent1, parent2 = random.sample(self.parents, 2)
+                idx = random.sample(range(size), 2)
                 start, end = min(idx), max(idx)
                 child = [None] * size
                 for i in range(start, end + 1, 1):
                     child[i] = parent1[i]
+
+                # Fill in the extra missing stops with address indexes that are not in child
                 pointer = 0
                 for i in range(size):
                     if child[i] is None:
@@ -232,7 +258,7 @@ class GeneticRoute:
         bag2 = []
         children = self.crossover(prob_cross)
         for child in children:
-            if np.random.rand() < prob_mut:
+            if random.random() < prob_mut:
                 bag2.append(swap(child))
             else:
                 bag2.append(child)
