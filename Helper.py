@@ -337,8 +337,9 @@ def display_all_trucks_distance(some_time: str, t1: Truck, t2: Truck, t3: Truck)
             d_list.append(0)
         else:
             d_list.append(total_time * t.speed)
-    print(f"Distance (miles) traveled by trucks at {some_time}]\n"
+    print(f"Distance (miles) traveled by trucks at {some_time}:\n"
           f"\tTruck1: {d_list[0]:.2f} miles\n"
           f"\tTruck2: {d_list[1]:.2f} miles\n"
           f"\tTruck3: {d_list[2]:.2f} miles\n"
+          f"\tTotal Miles: {sum(d_list)}"
           )
