@@ -1,4 +1,3 @@
-# import numpy as np
 import random
 
 from HashTable import HashTable
@@ -126,6 +125,7 @@ class GeneticRoute:
         Big(O): O(n^3) There are 3 loops deep at the most
         """
         total_distance = 0
+        # Copy the route, without reference in memory
         full_route = chromosome.copy()
         # Add the hub as the first element to be the starting location
         full_route.insert(0, 0)
