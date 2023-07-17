@@ -20,8 +20,8 @@ clear_console()
 # User input on how many iterations for the genetic algorithm
 while True:
     print(
-        "Enter the number of [bold magenta]iterations for the genetic algorithm to solve the route for"
-        "each truck. Default is 1000 iterations[/bold green], [red]a larger number will take longer,"
+        "Enter the number of iterations for the genetic algorithm to solve the route for"
+        "each truck. Default is 1000 iterations, a larger number will take longer,"
         "but can get a shorter route.")
     num_iters = input("Number of Iterations (press Enter for 1000): ")
     if num_iters == "":
@@ -83,7 +83,7 @@ while not proceed:
     # Truck 1
     truck1_package_indexes = convert_package_id_to_address_index(truck1.packages, address_index, hash_map)
 
-    best1, score1 = genetic_algorithm(truck1_package_indexes, np.asarray(distance_matrix), address_index,
+    best1, score1 = genetic_algorithm(truck1_package_indexes, distance_matrix, address_index,
                                       hash_map, truck1, num_iter=num_iters, verbose=True)
 
     # Time to complete the route in hours
@@ -97,7 +97,7 @@ while not proceed:
     # Truck 2
     truck2_package_indexes = convert_package_id_to_address_index(truck2.packages, address_index, hash_map)
 
-    best2, score2 = genetic_algorithm(truck2_package_indexes, np.asarray(distance_matrix), address_index,
+    best2, score2 = genetic_algorithm(truck2_package_indexes, distance_matrix, address_index,
                                       hash_map, truck2, num_iter=num_iters, verbose=True)
     truck2_total_time = score2 / truck2.speed
     truck2.finish_time = truck_finish_time(truck2, score2)
@@ -115,8 +115,8 @@ while not proceed:
 
     truck3_package_indexes = convert_package_id_to_address_index(truck3.packages, address_index, hash_map)
 
-    best3, score3 = genetic_algorithm(truck3_package_indexes, np.asarray(distance_matrix), address_index,
-                                      hash_map, truck3, num_iter=num_iters, verbose=True, )
+    best3, score3 = genetic_algorithm(truck3_package_indexes, distance_matrix, address_index,
+                                      hash_map, truck3, num_iter=num_iters, verbose=True)
 
     truck3_total_time = score3 / truck3.speed
     truck3.finish_time = truck_finish_time(truck3, score3)
@@ -132,20 +132,13 @@ while not proceed:
 
 print(f"Total trip distance is {total_distance:.2f} miles.")
 
-distance_mat = np.asarray(distance_matrix)
+distance_mat = distance_matrix
 
 print("Updating package data...")
 # Setting the delivery times of each package
 truck1_route = delivery_times(truck1, best1, distance_mat, address_index, hash_map)
 truck2_route = delivery_times(truck2, best2, distance_mat, address_index, hash_map)
 truck3_route = delivery_times(truck3, best3, distance_mat, address_index, hash_map)
-
-# # For auditing purposes, this will produce the overall distance and a 2d list of the
-# # route information in the following format:
-# #[['address',[package_ids for address], distance traveled so far, delivery time]]
-# print(f"Truck 1: {score1:.2f} miles\n{truck1_route}\n")
-# print(f"Truck 2: {score2:.2f} miles\n{truck2_route}\n")
-# print(f"Truck 3: {score3:.2f} miles\n{truck3_route}\n")
 
 print("Done! Ready for user input")
 
