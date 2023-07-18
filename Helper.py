@@ -307,8 +307,9 @@ def display_package_data_at_time(some_time: str, hash_table: HashTable):
     print(f"Package status table at {some_time}:")
 
     for row in table_list:
-        print(f"Package ID: {row[0]}, Truck ID: {row[4]}, Address: {row[1]}, City: {row[2]}, Zip: {row[3]}"
-              f"\n\tDeadline: {row[6]}, Status: {row[5]}, Time of Delivery: {row[7]}")
+        print(
+            f"Package ID: {row[0]} | Truck ID: {row[4]} | Address: {row[1]}, {row[2]}, {row[3]} | Deadline: {row[6]} | "
+            f"Status: {row[5]} | Time of Delivery: {row[7]}")
 
 
 def fill_package_truck_id(hash_table: HashTable, truck: Truck) -> None:
@@ -337,9 +338,9 @@ def display_all_trucks_distance(some_time: str, t1: Truck, t2: Truck, t3: Truck)
             d_list.append(0)
         else:
             d_list.append(total_time * t.speed)
-    print(f"Distance (miles) traveled by trucks at {some_time}:\n"
+    print(f"Distance (miles) traveled by all trucks at {some_time}:\n"
           f"\tTruck1: {d_list[0]:.2f} miles\n"
           f"\tTruck2: {d_list[1]:.2f} miles\n"
           f"\tTruck3: {d_list[2]:.2f} miles\n"
-          f"\tTotal Miles: {sum(d_list)}"
+          f"\tTotal: {sum(d_list):.2f} miles\n"
           )
