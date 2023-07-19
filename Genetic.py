@@ -166,7 +166,7 @@ class GeneticRoute:
                         time_to_delivery = total_distance / self.truck.speed
 
                         # The total distance up to the address divided by the speed (18 mph) will determine
-                        # if the deadline can be met. If the deadline cannot be met, then add 100 miles to the route.
+                        # if the deadline can be met. If the deadline cannot be met, then add 500 miles to the route.
                         deadline = _convert_to_hours(package.deadline)
                         departure = _convert_to_hours(self.truck.departure_time)
 
@@ -174,7 +174,8 @@ class GeneticRoute:
                         time_to_deadline = deadline - departure
 
                         if time_to_deadline < time_to_delivery:
-                            total_distance += 100
+                            total_distance += 10000
+                            break
 
         return total_distance
 
