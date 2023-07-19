@@ -108,7 +108,7 @@ class GeneticRoute:
                 address = key
                 break
 
-        # convert to package id
+        # convert address to package id
         for i in range(len(self.hash_table.data_map)):
             if self.hash_table.data_map[i] is not None:
                 for j in range(len(self.hash_table.data_map[i])):
@@ -146,18 +146,17 @@ class GeneticRoute:
                     if address_index == value:
                         address = key
 
-                # Get the packages that will be delivered at that address, that are on the same truck
-                packages = []
+                # Get the packages that will be delivered at that address and that are on the same truck
+                # Always goes through every package in the hashtable O(n)
+                packages: list = []
                 for k in range(len(self.hash_table.data_map)):
                     if self.hash_table.data_map[k] is not None:
                         for j in range(len(self.hash_table.data_map[k])):
                             package = self.hash_table.data_map[k][j][1]
-                            if (
-                                    package.address == address
-                                    and package.id in self.truck.packages
-                            ):
+                            if package.address == address and package.id in self.truck.packages:
                                 packages.append(package)
 
+                # Loop over the packages at the specified address on the truck and determine the total_distance
                 for package in packages:
                     deadline_str = package.deadline
                     if deadline_str != "EOD":
