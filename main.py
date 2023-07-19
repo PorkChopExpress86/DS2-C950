@@ -42,8 +42,8 @@ def load_truck_easy():
     """Manual loading of the truck packages
     Big(O): O(1)
     """
-    truck1.packages = [7, 29, 19, 1, 13, 39, 20, 21, 4, 40, 14, 15, 16, 34]
-    truck2.packages = [18, 36, 3, 8, 30, 6, 31, 32, 5, 37, 38, 25, 26]
+    truck1.packages = [7, 29, 19, 1, 13, 39, 20, 21, 4, 40, 14, 15, 16, 34, 30, 31]
+    truck2.packages = [18, 36, 3, 8, 6, 32, 5, 37, 38, 25, 26]
     truck3.packages = [27, 35, 2, 33, 11, 28, 17, 12, 24, 23, 10, 22, 9]
 
 
