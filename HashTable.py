@@ -4,13 +4,16 @@ class HashTable:
     Insert if O(1) look-ups are O(n) in worst case, but O(1) in best case.
     """
 
-    def __init__(self, size=13):
+    def __init__(self, size=31):
         """Initialize the hashtable with an empty list of the size
 
         :param size:  of the list. Recommended to be a prime number
         to properly reduce collisions.
         """
         self.data_map: list = [None] * size
+        self.size = size
+        self.entries = 0
+        self.load_factor = self.entries / self.size
 
     def __hash(self, key: int) -> int:
         """Creates a hash of the key
@@ -29,6 +32,7 @@ class HashTable:
         if self.data_map[index] is None:
             self.data_map[index] = []
         self.data_map[index].append([key, value])
+        self.entries += 1
 
     def get_item(self, key: int):
         """Return an item from the hash table using the id of the package
